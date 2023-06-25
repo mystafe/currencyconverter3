@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculate Currency</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="currencyDollarContainer" class="currencyContainer">
+      <div class="currencyDiv">
+        <h1>💵 Dollar Now</h1>
+        <button id="getUsdCurrencyBtn" onclick="getUsdCurrency()">
+          Refresh
+        </button>
+        <p>
+          Dollar:
+          <span id="currencyRate"></span>
+          <span id="currencyIncrease"></span>
+        </p>
+        <p>Time: <time id="currencyTime"></time></p>
+      </div>
+
+      <div class="currencyDiv">
+        <h1>💵 Dollar in old times</h1>
+        <input type="date" name="oldDate" id="oldDate" value="2013-01-01" />
+        <button id="getUsdCurrencyOldBtn" onclick="findHistorical()">
+          Teleport
+        </button>
+        <p>Dollar: <span id="currencyRateOld"></span></p>
+        <p>Time: <time id="currencyTimeOld"></time></p>
+      </div>
+    </div>
+
+    <div id="currencyOtherConatiner" class="currencyContainer">
+      <div class="currencyDiv">
+        <h1>💰 Other Currencies</h1>
+
+        <div class="currencySelection">
+          <div class="dropdown">
+            <select id="currency-select">
+              <option value="AUD">AUD (Australian Dollar)</option>
+              <option value="CAD">CAD (Canadian Dollar)</option>
+              <option value="CHF">CHF (Swiss Franc)</option>
+              <option value="CNY">CNY (Chinese Yuan)</option>
+              <option value="EUR" selected>EUR (Euro)</option>
+              <option value="GBP">GBP (British Pound)</option>
+              <option value="HKD">HKD (Hong Kong Dollar)</option>
+              <option value="INR">INR (Indian Rupee)</option>
+              <option value="JPY">JPY (Japanese Yen)</option>
+              <option value="KRW">KRW (South Korean Won)</option>
+              <option value="MXN">MXN (Mexican Peso)</option>
+              <option value="NOK">NOK (Norwegian Krone)</option>
+              <option value="NZD">NZD (New Zealand Dollar)</option>
+              <option value="RUB">RUB (Russian Ruble)</option>
+              <option value="SEK">SEK (Swedish Krona)</option>
+              <option value="SGD">SGD (Singapore Dollar)</option>
+              <option value="TRY">TRY (Turkish Lira)</option>
+              <option value="USD">USD (US Dollar)</option>
+              <option value="ZAR">ZAR (South African Rand)</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="getCurrencyBtn" onclick="getCurrency()">
+          Get Currency
+        </button>
+        <p>
+          Currency:
+          <span id="currencyRateOther"></span>
+          <span id="currencyIncreaseOther"></span>
+        </p>
+        <p>Time: <time id="currencyTimeOther"></time></p>
+      </div>
+
+      <div class="currencyDiv">
+        <h1>💰Other Currencies in old times</h1>
+        <div class="currencySelection">
+          <div class="dropdown">
+            <select id="currency-select-old">
+              <option value="AUD">AUD (Australian Dollar)</option>
+              <option value="CAD">CAD (Canadian Dollar)</option>
+              <option value="CHF">CHF (Swiss Franc)</option>
+              <option value="CNY">CNY (Chinese Yuan)</option>
+              <option value="EUR" selected>EUR (Euro)</option>
+              <option value="GBP">GBP (British Pound)</option>
+              <option value="HKD">HKD (Hong Kong Dollar)</option>
+              <option value="INR">INR (Indian Rupee)</option>
+              <option value="JPY">JPY (Japanese Yen)</option>
+              <option value="KRW">KRW (South Korean Won)</option>
+              <option value="MXN">MXN (Mexican Peso)</option>
+              <option value="NOK">NOK (Norwegian Krone)</option>
+              <option value="NZD">NZD (New Zealand Dollar)</option>
+              <option value="RUB">RUB (Russian Ruble)</option>
+              <option value="SEK">SEK (Swedish Krona)</option>
+              <option value="SGD">SGD (Singapore Dollar)</option>
+              <option value="TRY">TRY (Turkish Lira)</option>
+              <option value="USD">USD (US Dollar)</option>
+              <option value="ZAR">ZAR (South African Rand)</option>
+            </select>
+          </div>
+        </div>
+        <input
+          type="date"
+          name="oldDateOther"
+          id="oldDateOther"
+          value="2013-01-01"
+        />
+        <button onclick="findHistoricalCurrency()">Teleport</button>
+        <p>Currency: <span id="currencyRateOtherOld"></span></p>
+        <p>Time: <time id="currencyTimeOtherOld"></time></p>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer">
+        <p>Developed by Mustafa Evleksiz</p>
+        <p>© 2023 All Rights Reserved</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
