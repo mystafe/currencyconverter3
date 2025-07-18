@@ -41,6 +41,11 @@ body {
   padding: 0;
 }
 
+body.dark {
+  background-color: #121212;
+  color: #f1f1f1;
+}
+
 .currencyContainer {
   display: flex;
   flex-wrap: wrap;
@@ -63,13 +68,18 @@ body {
   transition: transform 0.3s ease;
 }
 
+body.dark .currencyDiv {
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+}
+
 .currencyDiv:hover {
   transform: translateY(-10px);
 }
 
 .currencyDiv h1 {
   margin-bottom: 15px;
-  color: #444;
+  color: inherit;
   font-size: 24px;
   text-transform: uppercase;
 }
@@ -91,7 +101,7 @@ body {
 .currencyDiv p {
   font-size: 18px;
   line-height: 1.6;
-  color: #555;
+  color: inherit;
 }
 
 .currencyDiv span {
@@ -109,6 +119,16 @@ input[type="date"] {
   color: #444;
 }
 
+input[type="number"] {
+  border: none;
+  border-bottom: 2px solid #6c5ce7;
+  background: transparent;
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: inherit;
+}
+
 select {
   margin: 20px 10px;
 }
@@ -120,7 +140,7 @@ select {
   width: 100%;
   padding: 10px 0;
   font-size: 16px;
-  color: #444;
+  color: inherit;
   appearance: none;
 }
 
@@ -142,6 +162,13 @@ button {
   font-size: 1.2rem;
 }
 
+.themeToggle {
+  width: auto;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
 #getUsdCurrencyBtn,
 #getUsdCurrencyOldBtn {
   background-color: #30931c;
@@ -158,6 +185,11 @@ button {
   bottom: 0;
   width: 100%;
   border-top: 3px solid #ffffff;
+}
+
+body.dark .footer {
+  background-color: #000000;
+  border-top-color: #ffffff;
 }
 
 .footer p {
