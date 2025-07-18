@@ -46,7 +46,7 @@ body {
 }
 
 body.dark {
-  background-color: #121212;
+  background-color: #2a2a2a;
   color: #f1f1f1;
 }
 
@@ -73,7 +73,7 @@ body.dark {
 }
 
 body.dark .currencyDiv {
-  background-color: #1e1e1e;
+  background-color: #3a3a3a;
   color: #f1f1f1;
 }
 
@@ -118,6 +118,7 @@ input[type="date"] {
   border-radius: 0;
   width: 100%;
   padding: 10px 0;
+  margin-top: 15px;
   margin-bottom: 20px;
   font-size: 16px;
   color: #444;
@@ -199,7 +200,7 @@ button {
 }
 
 body.dark .footer {
-  background-color: #000000;
+  background-color: #111111;
   border-top-color: #ffffff;
 }
 
@@ -210,4 +211,11 @@ body.dark .footer {
 
 .footer a {
   color: #61dafb;
+}
+
+.plusIcon {
+  text-align: center;
+  font-size: 2rem;
+  opacity: 0.5;
+  margin-top: 10px;
 }

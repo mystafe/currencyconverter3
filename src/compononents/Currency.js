@@ -227,6 +227,7 @@ function Currency() {
         1 {getSymbol(firstCurrency)} ({firstCurrency}) = <span id="currencyRateText" />
         <strong>{currencyRate}</strong> {getSymbol(secondCurrency)} ({secondCurrency})
       </p>
+      <div className="plusIcon">➕</div>
     </div>
   );
 }
