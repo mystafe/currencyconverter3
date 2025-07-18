@@ -191,7 +191,7 @@ function Currency() {
             >
               {currencyCodes.map((code) => (
                 <option key={code} value={code}>
-                  {getSymbol(code)}
+                  {`${getSymbol(code)} (${code})`}
                 </option>
               ))}
             </select>
@@ -209,7 +209,7 @@ function Currency() {
             >
               {currencyCodes.map((code) => (
                 <option key={code} value={code}>
-                  {getSymbol(code)}
+                  {`${getSymbol(code)} (${code})`}
                 </option>
               ))}
             </select>
@@ -224,8 +224,8 @@ function Currency() {
         onChange={(e) => handleDateSelection(e)}
       />
       <p>
-        1 {getSymbol(firstCurrency)} = <span id="currencyRateText" />
-        <strong>{currencyRate}</strong> {getSymbol(secondCurrency)}
+        1 {getSymbol(firstCurrency)} ({firstCurrency}) = <span id="currencyRateText" />
+        <strong>{currencyRate}</strong> {getSymbol(secondCurrency)} ({secondCurrency})
       </p>
     </div>
   );
