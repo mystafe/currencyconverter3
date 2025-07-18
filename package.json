@@ -1,6 +1,6 @@
 {
   "name": "currencyconverter3",
-  "version": "7.18.2221",
+  "version": "7.18.2245",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -15,7 +15,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "update-version": "node scripts/updateVersion.js"
   },
   "eslintConfig": {
     "extends": [

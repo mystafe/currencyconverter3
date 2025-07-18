@@ -169,6 +169,10 @@ select {
   margin-bottom: 10px;
 }
 
+.currencyRow input[type="number"] {
+  width: 60%;
+}
+
 button {
   width: 100%;
   font-size: 1.2rem;
@@ -216,7 +220,6 @@ body.dark .footer {
 .plusIcon {
   text-align: center;
   font-size: 2rem;
-  opacity: 0.5;
   margin-top: 10px;
   color: green;
   cursor: pointer;

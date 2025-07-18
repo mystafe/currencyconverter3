@@ -174,6 +174,12 @@ function Currency() {
     );
   };
 
+  const handleRemoveCurrency = (index) => {
+    if (window.confirm("Remove currency?")) {
+      setCurrencies((prev) => prev.filter((_, i) => i !== index));
+    }
+  };
+
   return (
     <div className="currencyDiv">
       <h1>💰Currency Calculator</h1>
@@ -200,14 +206,10 @@ function Currency() {
                   </option>
                 ))}
               </select>
-              {idx > 0 && currencies.length >= 3 && (
+              {currencies.length >= 3 && (
                 <span
                   className="minusIcon"
-                  onClick={() => {
-                    if (window.confirm("Remove currency?")) {
-                      setCurrencies((prev) => prev.filter((_, i) => i !== idx));
-                    }
-                  }}
+                  onClick={() => handleRemoveCurrency(idx)}
                 >
                   ➖
                 </span>
@@ -241,6 +243,11 @@ function Currency() {
           )}
         </div>
       </div>
+      {currencies.length < 6 && (
+        <div className="plusIcon" onClick={() => setShowAdd(!showAdd)}>
+          ➕
+        </div>
+      )}
       <input
         type="date"
         name="oldDateOther"
@@ -253,11 +260,6 @@ function Currency() {
           1 {getSymbol(currencies[0].code)} ({currencies[0].code}) ={' '}
           <strong>{currencies[1].rate}</strong> {getSymbol(currencies[1].code)} ({currencies[1].code})
         </p>
-      )}
-      {currencies.length < 6 && (
-        <div className="plusIcon" onClick={() => setShowAdd(!showAdd)}>
-          ➕
-        </div>
       )}
     </div>
   );
