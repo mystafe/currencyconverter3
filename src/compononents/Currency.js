@@ -1,5 +1,79 @@
 import { useEffect, useState } from "react";
 
+const currencySymbols = {
+  AUD: "A$",
+  BGN: "лв",
+  BRL: "R$",
+  CAD: "C$",
+  CHF: "CHF",
+  CNY: "¥",
+  CZK: "Kč",
+  DKK: "kr",
+  EUR: "€",
+  GBP: "£",
+  HKD: "HK$",
+  HUF: "Ft",
+  IDR: "Rp",
+  ILS: "₪",
+  INR: "₹",
+  ISK: "kr",
+  JPY: "¥",
+  KRW: "₩",
+  MXN: "MX$",
+  MYR: "RM",
+  NOK: "kr",
+  NZD: "NZ$",
+  PHP: "₱",
+  PLN: "zł",
+  RON: "lei",
+  SEK: "kr",
+  SGD: "S$",
+  THB: "฿",
+  TRY: "₺",
+  TRL: "₺",
+  USD: "$",
+  ZAR: "R",
+  AED: "د.إ",
+};
+
+const currencyCodes = [
+  "AUD",
+  "BGN",
+  "BRL",
+  "CAD",
+  "CHF",
+  "CNY",
+  "CZK",
+  "DKK",
+  "EUR",
+  "GBP",
+  "HKD",
+  "HUF",
+  "IDR",
+  "ILS",
+  "INR",
+  "ISK",
+  "JPY",
+  "KRW",
+  "MXN",
+  "MYR",
+  "NOK",
+  "NZD",
+  "PHP",
+  "PLN",
+  "RON",
+  "SEK",
+  "SGD",
+  "THB",
+  "TRY",
+  "USD",
+  "ZAR",
+  "AED",
+  "TRL",
+];
+
+const getSymbol = (code) => currencySymbols[code] || code;
+
 function Currency() {
   const [firstCurrency, setFirstCurrency] = useState("USD");
   const [secondCurrency, setSecondCurrency] = useState("TRY");
@@ -30,6 +104,43 @@ function Currency() {
   useEffect(() => {
     const fetchRate = async () => {
       try {
+        if (firstCurrency === "USD" && secondCurrency === "AED") {
+          const rate = 3.6725;
+          setCurrencyRate(rate);
+          setSecondAmount((firstAmount * rate).toFixed(4));
+          return;
+        }
+        if (firstCurrency === "AED" && secondCurrency === "USD") {
+          const rate = 1 / 3.6725;
+          setCurrencyRate(rate);
+          setSecondAmount((firstAmount * rate).toFixed(4));
+          return;
+        }
+        if (firstCurrency === "AED") {
+          const resp = await fetch(
+            `https://api.frankfurter.app/${currencyTime}?from=USD&to=${secondCurrency}`
+          );
+          if (!resp.ok) throw new Error("Request failed!");
+          const data = await resp.json();
+          const usdToSecond = data.rates[secondCurrency];
+          const rate = (1 / 3.6725) * usdToSecond;
+          setCurrencyRate(rate);
+          setSecondAmount((firstAmount * rate).toFixed(4));
+          return;
+        }
+        if (secondCurrency === "AED") {
+          const resp = await fetch(
+            `https://api.frankfurter.app/${currencyTime}?from=${firstCurrency}&to=USD`
+          );
+          if (!resp.ok) throw new Error("Request failed!");
+          const data = await resp.json();
+          const firstToUsd = data.rates["USD"];
+          const rate = firstToUsd * 3.6725;
+          setCurrencyRate(rate);
+          setSecondAmount((firstAmount * rate).toFixed(4));
+          return;
+        }
+
         const response = await fetch(
           `https://api.frankfurter.app/${currencyTime}?from=${firstCurrency}&to=${secondCurrency}`
         );
@@ -67,90 +178,42 @@ function Currency() {
       <h1>💰Currency Calculator</h1>
       <div className="currencySelection">
         <div className="dropdown">
-          <input
-            type="number"
-            value={firstAmount}
-            onChange={handleFirstAmountChange}
-          />
-          <select
-            id="currency-select-from"
-            value={firstCurrency}
-            onChange={(e) => handleFirstCurrencySelection(e)}
-          >
-            <option value="AUD">AUD (Australian Dollar)</option>
-            <option value="BGN">BGN (Bulgarian Lev)</option>
-            <option value="BRL">BRL (Brazilian Real)</option>
-            <option value="CAD">CAD (Canadian Dollar)</option>
-            <option value="CHF">CHF (Swiss Franc)</option>
-            <option value="CNY">CNY (Chinese Renminbi Yuan)</option>
-            <option value="CZK">CZK (Czech Koruna)</option>
-            <option value="DKK">DKK (Danish Krone)</option>
-            <option value="EUR">EUR (Euro)</option>
-            <option value="GBP">GBP (British Pound)</option>
-            <option value="HKD">HKD (Hong Kong Dollar)</option>
-            <option value="HUF">HUF (Hungarian Forint)</option>
-            <option value="IDR">IDR (Indonesian Rupiah)</option>
-            <option value="ILS">ILS (Israeli New Sheqel)</option>
-            <option value="INR">INR (Indian Rupee)</option>
-            <option value="ISK">ISK (Icelandic Króna)</option>
-            <option value="JPY">JPY (Japanese Yen)</option>
-            <option value="KRW">KRW (South Korean Won)</option>
-            <option value="MXN">MXN (Mexican Peso)</option>
-            <option value="MYR">MYR (Malaysian Ringgit)</option>
-            <option value="NOK">NOK (Norwegian Krone)</option>
-            <option value="NZD">NZD (New Zealand Dollar)</option>
-            <option value="PHP">PHP (Philippine Peso)</option>
-            <option value="PLN">PLN (Polish Złoty)</option>
-            <option value="RON">RON (Romanian Leu)</option>
-            <option value="SEK">SEK (Swedish Krona)</option>
-            <option value="SGD">SGD (Singapore Dollar)</option>
-            <option value="THB">THB (Thai Baht)</option>
-            <option value="TRY">TRY (Turkish Lira)</option>
-            <option value="USD">USD (United States Dollar)</option>
-            <option value="ZAR">ZAR (South African Rand)</option>
-          </select>
-          <input
-            type="number"
-            value={secondAmount}
-            onChange={handleSecondAmountChange}
-          />
-          <select
-            id="currency-select-to"
-            value={secondCurrency}
-            onChange={(e) => handleSecondCurrencySelection(e)}
-          >
-            <option value="AUD">AUD (Australian Dollar)</option>
-            <option value="BGN">BGN (Bulgarian Lev)</option>
-            <option value="BRL">BRL (Brazilian Real)</option>
-            <option value="CAD">CAD (Canadian Dollar)</option>
-            <option value="CHF">CHF (Swiss Franc)</option>
-            <option value="CNY">CNY (Chinese Renminbi Yuan)</option>
-            <option value="CZK">CZK (Czech Koruna)</option>
-            <option value="DKK">DKK (Danish Krone)</option>
-            <option value="EUR">EUR (Euro)</option>
-            <option value="GBP">GBP (British Pound)</option>
-            <option value="HKD">HKD (Hong Kong Dollar)</option>
-            <option value="HUF">HUF (Hungarian Forint)</option>
-            <option value="IDR">IDR (Indonesian Rupiah)</option>
-            <option value="ILS">ILS (Israeli New Sheqel)</option>
-            <option value="INR">INR (Indian Rupee)</option>
-            <option value="ISK">ISK (Icelandic Króna)</option>
-            <option value="JPY">JPY (Japanese Yen)</option>
-            <option value="KRW">KRW (South Korean Won)</option>
-            <option value="MXN">MXN (Mexican Peso)</option>
-            <option value="MYR">MYR (Malaysian Ringgit)</option>
-            <option value="NOK">NOK (Norwegian Krone)</option>
-            <option value="NZD">NZD (New Zealand Dollar)</option>
-            <option value="PHP">PHP (Philippine Peso)</option>
-            <option value="PLN">PLN (Polish Złoty)</option>
-            <option value="RON">RON (Romanian Leu)</option>
-            <option value="SEK">SEK (Swedish Krona)</option>
-            <option value="SGD">SGD (Singapore Dollar)</option>
-            <option value="THB">THB (Thai Baht)</option>
-            <option value="TRY">TRY (Turkish Lira)</option>
-            <option value="USD">USD (United States Dollar)</option>
-            <option value="ZAR">ZAR (South African Rand)</option>
-          </select>
+          <div className="currencyRow">
+            <input
+              type="number"
+              value={firstAmount}
+              onChange={handleFirstAmountChange}
+            />
+            <select
+              id="currency-select-from"
+              value={firstCurrency}
+              onChange={(e) => handleFirstCurrencySelection(e)}
+            >
+              {currencyCodes.map((code) => (
+                <option key={code} value={code}>
+                  {getSymbol(code)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="currencyRow">
+            <input
+              type="number"
+              value={secondAmount}
+              onChange={handleSecondAmountChange}
+            />
+            <select
+              id="currency-select-to"
+              value={secondCurrency}
+              onChange={(e) => handleSecondCurrencySelection(e)}
+            >
+              {currencyCodes.map((code) => (
+                <option key={code} value={code}>
+                  {getSymbol(code)}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
       <input
@@ -161,8 +224,8 @@ function Currency() {
         onChange={(e) => handleDateSelection(e)}
       />
       <p>
-        1 {firstCurrency} = <span id="currencyRateText" />
-        <strong>{currencyRate}</strong> {secondCurrency}
+        1 {getSymbol(firstCurrency)} = <span id="currencyRateText" />
+        <strong>{currencyRate}</strong> {getSymbol(secondCurrency)}
       </p>
     </div>
   );

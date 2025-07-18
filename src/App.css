@@ -41,6 +41,10 @@ body {
   padding: 0;
 }
 
+.container {
+  padding-top: 20px;
+}
+
 body.dark {
   background-color: #121212;
   color: #f1f1f1;
@@ -130,14 +134,14 @@ input[type="number"] {
 }
 
 select {
-  margin: 20px 10px;
+  margin: 0 10px;
 }
 
 .dropdown select {
   border: none;
   border-bottom: 2px solid #6c5ce7;
   background: transparent;
-  width: 100%;
+  width: auto;
   padding: 10px 0;
   font-size: 16px;
   color: inherit;
@@ -155,6 +159,13 @@ select {
 
 .dropdown {
   position: relative;
+}
+
+.currencyRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 button {
@@ -195,4 +206,8 @@ body.dark .footer {
 .footer p {
   margin: 0;
   padding: 0;
+}
+
+.footer a {
+  color: #61dafb;
 }
