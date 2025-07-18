@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 
 const currencySymbols = {
@@ -74,146 +75,170 @@ const currencyCodes = [
 
 const getSymbol = (code) => currencySymbols[code] || code;
 
+const fetchRate = async (from, to, date) => {
+  if (from === to) return 1;
+  if (from === "USD" && to === "AED") return 3.6725;
+  if (from === "AED" && to === "USD") return 1 / 3.6725;
+  if (from === "AED") {
+    const resp = await fetch(
+      `https://api.frankfurter.app/${date}?from=USD&to=${to}`
+    );
+    if (!resp.ok) throw new Error("Request failed!");
+    const data = await resp.json();
+    const usdToSecond = data.rates[to];
+    return (1 / 3.6725) * usdToSecond;
+  }
+  if (to === "AED") {
+    const resp = await fetch(
+      `https://api.frankfurter.app/${date}?from=${from}&to=USD`
+    );
+    if (!resp.ok) throw new Error("Request failed!");
+    const data = await resp.json();
+    const firstToUsd = data.rates["USD"];
+    return firstToUsd * 3.6725;
+  }
+  const response = await fetch(
+    `https://api.frankfurter.app/${date}?from=${from}&to=${to}`
+  );
+  if (!response.ok) throw new Error("Request failed!");
+  const data = await response.json();
+  return data.rates[to];
+};
+
 function Currency() {
-  const [firstCurrency, setFirstCurrency] = useState("USD");
-  const [secondCurrency, setSecondCurrency] = useState("TRY");
-  const [currencyRate, setCurrencyRate] = useState(0);
-  const [firstAmount, setFirstAmount] = useState(1);
-  const [secondAmount, setSecondAmount] = useState(0);
+  const [currencies, setCurrencies] = useState([
+    { code: "USD", amount: 1, rate: 1 },
+    { code: "TRY", amount: 0, rate: 0 },
+  ]);
   const [currencyTime, setCurrencyTime] = useState(
     new Date().toISOString().slice(0, 10)
   );
-  const handleFirstCurrencySelection = (e) => {
-    setFirstCurrency(e.target.value);
-  };
-  const handleSecondCurrencySelection = (e) => {
-    setSecondCurrency(e.target.value);
-  };
+  const [showAdd, setShowAdd] = useState(false);
 
   const handleDateSelection = (e) => {
-    setCurrencyTime(e.target.value);
-    if (currencyTime < "2005-01-01") {
-      if (firstCurrency === "TRY") setFirstCurrency("TRL");
-      if (secondCurrency === "TRY") setSecondCurrency("TRL");
-    } else if (currencyTime >= "2005-01-01") {
-      if (firstCurrency === "TRL") setFirstCurrency("TRY");
-      if (secondCurrency === "TRL") setSecondCurrency("TRY");
-    }
+    const val = e.target.value;
+    setCurrencyTime(val);
+    setCurrencies((prev) =>
+      prev.map((c, idx) => {
+        if (val < "2005-01-01" && c.code === "TRY") return { ...c, code: "TRL" };
+        if (val >= "2005-01-01" && c.code === "TRL") return { ...c, code: "TRY" };
+        return c;
+      })
+    );
   };
 
+  const codesList = currencies.slice(1).map((c) => c.code).join();
   useEffect(() => {
-    const fetchRate = async () => {
+    const updateRates = async () => {
       try {
-        if (firstCurrency === "USD" && secondCurrency === "AED") {
-          const rate = 3.6725;
-          setCurrencyRate(rate);
-          setSecondAmount((firstAmount * rate).toFixed(4));
-          return;
-        }
-        if (firstCurrency === "AED" && secondCurrency === "USD") {
-          const rate = 1 / 3.6725;
-          setCurrencyRate(rate);
-          setSecondAmount((firstAmount * rate).toFixed(4));
-          return;
-        }
-        if (firstCurrency === "AED") {
-          const resp = await fetch(
-            `https://api.frankfurter.app/${currencyTime}?from=USD&to=${secondCurrency}`
-          );
-          if (!resp.ok) throw new Error("Request failed!");
-          const data = await resp.json();
-          const usdToSecond = data.rates[secondCurrency];
-          const rate = (1 / 3.6725) * usdToSecond;
-          setCurrencyRate(rate);
-          setSecondAmount((firstAmount * rate).toFixed(4));
-          return;
-        }
-        if (secondCurrency === "AED") {
-          const resp = await fetch(
-            `https://api.frankfurter.app/${currencyTime}?from=${firstCurrency}&to=USD`
-          );
-          if (!resp.ok) throw new Error("Request failed!");
-          const data = await resp.json();
-          const firstToUsd = data.rates["USD"];
-          const rate = firstToUsd * 3.6725;
-          setCurrencyRate(rate);
-          setSecondAmount((firstAmount * rate).toFixed(4));
-          return;
-        }
-
-        const response = await fetch(
-          `https://api.frankfurter.app/${currencyTime}?from=${firstCurrency}&to=${secondCurrency}`
+        const base = currencies[0];
+        const updated = await Promise.all(
+          currencies.map(async (c, idx) => {
+            if (idx === 0) return { ...c, rate: 1, amount: base.amount };
+            const rate = await fetchRate(base.code, c.code, currencyTime);
+            return { ...c, rate, amount: (base.amount * rate).toFixed(4) };
+          })
         );
-        if (!response.ok) throw new Error("Request failed!");
-        const data = await response.json();
-        const rate = data.rates[secondCurrency];
-        setCurrencyRate(rate);
-        setSecondAmount((firstAmount * rate).toFixed(4));
-      } catch (error) {
-        console.log(error.message);
+        setCurrencies(updated);
+      } catch (err) {
+        console.log(err.message);
       }
     };
-    fetchRate();
-  }, [currencyTime, firstCurrency, secondCurrency]);
+    updateRates();
+  }, [currencyTime, currencies[0].code, currencies[0].amount, codesList]);
 
-  const handleFirstAmountChange = (e) => {
+  const handleBaseAmountChange = (e) => {
     const value = e.target.value;
-    setFirstAmount(value);
-    setSecondAmount((value * currencyRate).toFixed(4));
+    setCurrencies((prev) =>
+      prev.map((c, idx) =>
+        idx === 0 ? { ...c, amount: value } : { ...c, amount: (value * c.rate).toFixed(4) }
+      )
+    );
   };
 
-  const handleSecondAmountChange = (e) => {
-    const value = e.target.value;
-    setSecondAmount(value);
-    setFirstAmount(currencyRate ? (value / currencyRate).toFixed(4) : 0);
+  const handleTargetAmountChange = (index, value) => {
+    setCurrencies((prev) => {
+      const rate = prev[index].rate;
+      const baseAmount = rate ? (value / rate).toFixed(4) : 0;
+      return prev.map((c, idx) =>
+        idx === 0
+          ? { ...c, amount: baseAmount }
+          : { ...c, amount: (idx === index ? value : (baseAmount * c.rate).toFixed(4)), rate: c.rate }
+      );
+    });
   };
 
-  console.log("firstCurrency", firstCurrency);
-  console.log("secondCurrency", secondCurrency);
-  console.log("currencyRate", currencyRate);
-  console.log("currencyTime", currencyTime);
+  const handleCurrencyChange = (index, code) => {
+    setCurrencies((prev) =>
+      prev.map((c, idx) => (idx === index ? { ...c, code } : c))
+    );
+  };
 
   return (
     <div className="currencyDiv">
       <h1>💰Currency Calculator</h1>
       <div className="currencySelection">
         <div className="dropdown">
-          <div className="currencyRow">
-            <input
-              type="number"
-              value={firstAmount}
-              onChange={handleFirstAmountChange}
-            />
+          {currencies.map((c, idx) => (
+            <div className="currencyRow" key={idx}>
+              <input
+                type="number"
+                value={c.amount}
+                onChange={(e) =>
+                  idx === 0
+                    ? handleBaseAmountChange(e)
+                    : handleTargetAmountChange(idx, e.target.value)
+                }
+              />
+              <select
+                value={c.code}
+                onChange={(e) => handleCurrencyChange(idx, e.target.value)}
+              >
+                {currencyCodes.map((code) => (
+                  <option key={code} value={code}>
+                    {`${getSymbol(code)} (${code})`}
+                  </option>
+                ))}
+              </select>
+              {idx > 0 && currencies.length >= 3 && (
+                <span
+                  className="minusIcon"
+                  onClick={() => {
+                    if (window.confirm("Remove currency?")) {
+                      setCurrencies((prev) => prev.filter((_, i) => i !== idx));
+                    }
+                  }}
+                >
+                  ➖
+                </span>
+              )}
+            </div>
+          ))}
+          {showAdd && (
             <select
-              id="currency-select-from"
-              value={firstCurrency}
-              onChange={(e) => handleFirstCurrencySelection(e)}
+              className="addSelect"
+              onChange={(e) => {
+                if (!e.target.value) return;
+                setCurrencies((prev) => [
+                  ...prev,
+                  { code: e.target.value, amount: 0, rate: 0 },
+                ]);
+                setShowAdd(false);
+              }}
+              defaultValue=""
             >
-              {currencyCodes.map((code) => (
-                <option key={code} value={code}>
-                  {`${getSymbol(code)} (${code})`}
-                </option>
-              ))}
+              <option value="" disabled>
+                Select currency
+              </option>
+              {currencyCodes
+                .filter((code) => !currencies.some((c) => c.code === code))
+                .map((code) => (
+                  <option key={code} value={code}>
+                    {`${getSymbol(code)} (${code})`}
+                  </option>
+                ))}
             </select>
-          </div>
-          <div className="currencyRow">
-            <input
-              type="number"
-              value={secondAmount}
-              onChange={handleSecondAmountChange}
-            />
-            <select
-              id="currency-select-to"
-              value={secondCurrency}
-              onChange={(e) => handleSecondCurrencySelection(e)}
-            >
-              {currencyCodes.map((code) => (
-                <option key={code} value={code}>
-                  {`${getSymbol(code)} (${code})`}
-                </option>
-              ))}
-            </select>
-          </div>
+          )}
         </div>
       </div>
       <input
@@ -223,11 +248,17 @@ function Currency() {
         defaultValue={new Date().toISOString().slice(0, 10)}
         onChange={(e) => handleDateSelection(e)}
       />
-      <p>
-        1 {getSymbol(firstCurrency)} ({firstCurrency}) = <span id="currencyRateText" />
-        <strong>{currencyRate}</strong> {getSymbol(secondCurrency)} ({secondCurrency})
-      </p>
-      <div className="plusIcon">➕</div>
+      {currencies.length > 1 && (
+        <p>
+          1 {getSymbol(currencies[0].code)} ({currencies[0].code}) ={' '}
+          <strong>{currencies[1].rate}</strong> {getSymbol(currencies[1].code)} ({currencies[1].code})
+        </p>
+      )}
+      {currencies.length < 6 && (
+        <div className="plusIcon" onClick={() => setShowAdd(!showAdd)}>
+          ➕
+        </div>
+      )}
     </div>
   );
 }
