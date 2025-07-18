@@ -4,6 +4,8 @@ function Currency() {
   const [firstCurrency, setFirstCurrency] = useState("USD");
   const [secondCurrency, setSecondCurrency] = useState("TRY");
   const [currencyRate, setCurrencyRate] = useState(0);
+  const [firstAmount, setFirstAmount] = useState(1);
+  const [secondAmount, setSecondAmount] = useState(0);
   const [currencyTime, setCurrencyTime] = useState(
     new Date().toISOString().slice(0, 10)
   );
@@ -25,32 +27,34 @@ function Currency() {
     }
   };
 
-  const useCalculateCurrency = () => {
-    useEffect(() => {
-      fetch(
-        `https://api.frankfurter.app/${currencyTime}?from=${firstCurrency}&to=${secondCurrency}`
-      )
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Request failed!");
-        })
-        .then((jsonResponse) => {
-          setCurrencyRate(jsonResponse.rates[secondCurrency]);
-          console.log(jsonResponse.rates[secondCurrency], "test");
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-      setCurrencyRate(currencyRate);
-    }, [currencyTime, firstCurrency, secondCurrency]);
+  useEffect(() => {
+    const fetchRate = async () => {
+      try {
+        const response = await fetch(
+          `https://api.frankfurter.app/${currencyTime}?from=${firstCurrency}&to=${secondCurrency}`
+        );
+        if (!response.ok) throw new Error("Request failed!");
+        const data = await response.json();
+        const rate = data.rates[secondCurrency];
+        setCurrencyRate(rate);
+        setSecondAmount((firstAmount * rate).toFixed(4));
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchRate();
+  }, [currencyTime, firstCurrency, secondCurrency]);
 
-    return currencyRate;
+  const handleFirstAmountChange = (e) => {
+    const value = e.target.value;
+    setFirstAmount(value);
+    setSecondAmount((value * currencyRate).toFixed(4));
   };
-  useCalculateCurrency();
-  const calculateCurrency = () => {
-    setCurrencyRate(currencyRate);
+
+  const handleSecondAmountChange = (e) => {
+    const value = e.target.value;
+    setSecondAmount(value);
+    setFirstAmount(currencyRate ? (value / currencyRate).toFixed(4) : 0);
   };
 
   console.log("firstCurrency", firstCurrency);
@@ -63,9 +67,14 @@ function Currency() {
       <h1>💰Currency Calculator</h1>
       <div className="currencySelection">
         <div className="dropdown">
+          <input
+            type="number"
+            value={firstAmount}
+            onChange={handleFirstAmountChange}
+          />
           <select
             id="currency-select-from"
-            defaultValue="USD"
+            value={firstCurrency}
             onChange={(e) => handleFirstCurrencySelection(e)}
           >
             <option value="AUD">AUD (Australian Dollar)</option>
@@ -100,9 +109,14 @@ function Currency() {
             <option value="USD">USD (United States Dollar)</option>
             <option value="ZAR">ZAR (South African Rand)</option>
           </select>
+          <input
+            type="number"
+            value={secondAmount}
+            onChange={handleSecondAmountChange}
+          />
           <select
             id="currency-select-to"
-            defaultValue="TRY"
+            value={secondCurrency}
             onChange={(e) => handleSecondCurrencySelection(e)}
           >
             <option value="AUD">AUD (Australian Dollar)</option>
@@ -146,7 +160,6 @@ function Currency() {
         defaultValue={new Date().toISOString().slice(0, 10)}
         onChange={(e) => handleDateSelection(e)}
       />
-      <button onClick={() => calculateCurrency()}>Get Currency Rate</button>
       <p>
         1 {firstCurrency} = <span id="currencyRateText" />
         <strong>{currencyRate}</strong> {secondCurrency}
