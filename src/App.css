@@ -84,7 +84,7 @@ body.dark .currencyDiv {
 .currencyDiv h1 {
   margin-bottom: 15px;
   color: inherit;
-  font-size: 24px;
+  font-size: 20px;
   text-transform: uppercase;
 }
 
@@ -221,12 +221,34 @@ body.dark .footer {
   text-align: center;
   font-size: 2rem;
   margin-top: 10px;
-  color: green;
+  color: #0f9d58;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.plusIcon:hover {
+  animation: scaleIcon 0.3s forwards;
 }
 
 .minusIcon {
-  color: red;
+  color: #db4437;
   margin-left: 10px;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.minusIcon:hover {
+  animation: scaleIcon 0.3s forwards;
+}
+
+@keyframes scaleIcon {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
