@@ -109,6 +109,7 @@ function Currency() {
   const [currencies, setCurrencies] = useState([
     { code: "USD", amount: 1, rate: 1 },
     { code: "TRY", amount: 0, rate: 0 },
+    { code: "AED", amount: 0, rate: 0 },
   ]);
   const [currencyTime, setCurrencyTime] = useState(
     new Date().toISOString().slice(0, 10)
@@ -136,7 +137,7 @@ function Currency() {
           currencies.map(async (c, idx) => {
             if (idx === 0) return { ...c, rate: 1, amount: base.amount };
             const rate = await fetchRate(base.code, c.code, currencyTime);
-            return { ...c, rate, amount: (base.amount * rate).toFixed(4) };
+            return { ...c, rate, amount: (base.amount * rate).toFixed(2) };
           })
         );
         setCurrencies(updated);
@@ -151,7 +152,7 @@ function Currency() {
     const value = e.target.value;
     setCurrencies((prev) =>
       prev.map((c, idx) =>
-        idx === 0 ? { ...c, amount: value } : { ...c, amount: (value * c.rate).toFixed(4) }
+        idx === 0 ? { ...c, amount: value } : { ...c, amount: (value * c.rate).toFixed(2) }
       )
     );
   };
@@ -159,11 +160,11 @@ function Currency() {
   const handleTargetAmountChange = (index, value) => {
     setCurrencies((prev) => {
       const rate = prev[index].rate;
-      const baseAmount = rate ? (value / rate).toFixed(4) : 0;
+      const baseAmount = rate ? (value / rate).toFixed(2) : 0;
       return prev.map((c, idx) =>
         idx === 0
           ? { ...c, amount: baseAmount }
-          : { ...c, amount: (idx === index ? value : (baseAmount * c.rate).toFixed(4)), rate: c.rate }
+          : { ...c, amount: (idx === index ? value : (baseAmount * c.rate).toFixed(2)), rate: c.rate }
       );
     });
   };
