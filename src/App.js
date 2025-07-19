@@ -1,6 +1,7 @@
 import "./App.css";
 import Currency from "./compononents/Currency";
 import Footer from "./compononents/Footer";
+import AssetDownloader from "./compononents/AssetDownloader";
 import logo from "./logo.svg";
 import { useEffect, useState } from "react";
 
@@ -38,6 +39,7 @@ function App() {
         </button>
       )}
       <Currency isSuper={superMode} />
+      <AssetDownloader />
       <Footer />
     </div>
   );
