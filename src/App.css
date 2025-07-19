@@ -167,6 +167,15 @@ body.dark .react-datepicker__input-container input {
   color: #fff;
 }
 
+body.dark .react-datepicker__day {
+  color: #fff;
+}
+
+body.dark .react-datepicker__day--disabled,
+body.dark .react-datepicker__day--outside-month {
+  color: #000;
+}
+
 input[type="number"] {
   border: none;
   border-bottom: 2px solid #6c5ce7;
@@ -232,9 +241,6 @@ button {
   padding: 20px 0;
   color: #ffffff;
   font-size: 14px;
-  position: fixed;
-  left: 0;
-  bottom: 0;
   width: 100%;
   border-top: 3px solid #ffffff;
 }

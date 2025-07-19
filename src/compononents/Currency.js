@@ -111,7 +111,7 @@ const fetchRate = async (from, to, date) => {
 
 function Currency({ isSuper, onTitleClick }) {
   const [currencies, setCurrencies] = useState([
-    { code: "USD", amount: 1, rate: 1 },
+    { code: "EUR", amount: 1, rate: 1 },
     { code: "TRY", amount: 0, rate: 0 },
     { code: "AED", amount: 0, rate: 0 },
   ]);
@@ -319,7 +319,7 @@ function Currency({ isSuper, onTitleClick }) {
           )}
         </div>
       </div>
-      {currencies.length < 6 && (
+      {currencies.length < 8 && (
         <Button
           variant="success"
           className="plusIcon"
