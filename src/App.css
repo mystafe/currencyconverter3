@@ -50,6 +50,14 @@ body.dark {
   color: #f1f1f1;
 }
 
+.logo {
+  width: 50px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+}
+
 .currencyContainer {
   display: flex;
   flex-wrap: wrap;
@@ -217,11 +225,11 @@ body.dark .footer {
   color: #61dafb;
 }
 
-.plusIcon {
+.currencyDiv .plusIcon {
   text-align: center;
   font-size: 2rem;
   margin-top: 10px;
-  color: #0f9d58;
+  color: #0f9d58 !important;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -230,8 +238,8 @@ body.dark .footer {
   animation: scaleIcon 0.3s forwards;
 }
 
-.minusIcon {
-  color: #db4437;
+.currencyDiv .minusIcon {
+  color: #db4437 !important;
   margin-left: 10px;
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -251,4 +259,22 @@ body.dark .footer {
   100% {
     transform: scale(1);
   }
+}
+
+.dateNavigator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.dateNavigator button {
+  width: auto;
+  padding: 5px 10px;
+}
+
+.dateNavigator button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

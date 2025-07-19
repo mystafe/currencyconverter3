@@ -105,16 +105,51 @@ const fetchRate = async (from, to, date) => {
   return data.rates[to];
 };
 
-function Currency() {
+function Currency({ isSuper }) {
   const [currencies, setCurrencies] = useState([
     { code: "USD", amount: 1, rate: 1 },
     { code: "TRY", amount: 0, rate: 0 },
     { code: "AED", amount: 0, rate: 0 },
   ]);
-  const [currencyTime, setCurrencyTime] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
+  const today = new Date().toISOString().slice(0, 10);
+  const [currencyTime, setCurrencyTime] = useState(today);
   const [showAdd, setShowAdd] = useState(false);
+
+  const nextDayDisabled = currencyTime >= today;
+  const nextMonthDisabled = (() => {
+    const d = new Date(currencyTime);
+    d.setMonth(d.getMonth() + 1);
+    return d.toISOString().slice(0, 10) > today;
+  })();
+  const nextYearDisabled = (() => {
+    const d = new Date(currencyTime);
+    d.setFullYear(d.getFullYear() + 1);
+    return d.toISOString().slice(0, 10) > today;
+  })();
+
+  const changeDate = (days) => {
+    const d = new Date(currencyTime);
+    d.setDate(d.getDate() + days);
+    const newDate = d.toISOString().slice(0, 10);
+    if (newDate > today) return;
+    handleDateSelection({ target: { value: newDate } });
+  };
+
+  const changeMonth = (months) => {
+    const d = new Date(currencyTime);
+    d.setMonth(d.getMonth() + months);
+    const newDate = d.toISOString().slice(0, 10);
+    if (newDate > today) return;
+    handleDateSelection({ target: { value: newDate } });
+  };
+
+  const changeYear = (years) => {
+    const d = new Date(currencyTime);
+    d.setFullYear(d.getFullYear() + years);
+    const newDate = d.toISOString().slice(0, 10);
+    if (newDate > today) return;
+    handleDateSelection({ target: { value: newDate } });
+  };
 
   const handleDateSelection = (e) => {
     const val = e.target.value;
@@ -249,13 +284,39 @@ function Currency() {
           ➕
         </div>
       )}
-      <input
-        type="date"
-        name="oldDateOther"
-        id="oldDateOther"
-        defaultValue={new Date().toISOString().slice(0, 10)}
-        onChange={(e) => handleDateSelection(e)}
-      />
+      {isSuper ? (
+        <div className="dateNavigator">
+          <button onClick={() => changeYear(-1)}>{"<<<"}</button>
+          <button onClick={() => changeMonth(-1)}>{"<<"}</button>
+          <button onClick={() => changeDate(-1)}>{"<"}</button>
+          <input
+            type="date"
+            name="oldDateOther"
+            id="oldDateOther"
+            value={currencyTime}
+            max={today}
+            onChange={(e) => handleDateSelection(e)}
+          />
+          <button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
+            {">"}
+          </button>
+          <button onClick={() => changeMonth(1)} disabled={nextMonthDisabled}>
+            {">>"}
+          </button>
+          <button onClick={() => changeYear(1)} disabled={nextYearDisabled}>
+            {">>>"}
+          </button>
+        </div>
+      ) : (
+        <input
+          type="date"
+          name="oldDateOther"
+          id="oldDateOther"
+          value={currencyTime}
+          max={today}
+          onChange={(e) => handleDateSelection(e)}
+        />
+      )}
       {currencies.length > 1 && (
         <p>
           1 {getSymbol(currencies[0].code)} ({currencies[0].code}) ={' '}

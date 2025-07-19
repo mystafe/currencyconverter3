@@ -15,7 +15,6 @@ const version = getVersion();
 const root = path.join(__dirname, '..');
 const pkgPath = path.join(root, 'package.json');
 const pkgLockPath = path.join(root, 'package-lock.json');
-const footerPath = path.join(root, 'src', 'compononents', 'Footer.js');
 
 function updateJSON(filePath, handler) {
   const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -30,9 +29,5 @@ updateJSON(pkgLockPath, (data) => {
     data.packages[''].version = version;
   }
 });
-
-let footerContent = fs.readFileSync(footerPath, 'utf8');
-footerContent = footerContent.replace(/v\d+\.\d+\.\d+/g, `v${version}`);
-fs.writeFileSync(footerPath, footerContent);
 
 console.log(`Version updated to ${version}`);
