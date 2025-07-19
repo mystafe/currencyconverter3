@@ -219,7 +219,6 @@ function Currency({ isSuper }) {
 
   return (
     <div className="currencyDiv">
-      <h1>💰Currency Calculator</h1>
       <div className="currencySelection">
         <div className="dropdown">
           <AnimatePresence>

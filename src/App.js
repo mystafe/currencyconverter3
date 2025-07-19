@@ -1,7 +1,9 @@
 import "./App.css";
 import Currency from "./compononents/Currency";
 import Footer from "./compononents/Footer";
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
+import logo from "./logo.png"; // Adjust the path as necessary
+
 import { useEffect, useState } from "react";
 
 function App() {
