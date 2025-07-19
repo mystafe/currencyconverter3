@@ -192,9 +192,14 @@ function Currency({ isSuper }) {
       if (typeof val === "string") {
         const upper = val.trim().toUpperCase();
         if (upper === "M") return 1000000;
+        if (upper === "K") return 1000;
         if (upper.endsWith("M")) {
           const num = parseFloat(upper.slice(0, -1));
           return (isNaN(num) ? 1 : num) * 1000000;
+        }
+        if (upper.endsWith("K")) {
+          const num = parseFloat(upper.slice(0, -1));
+          return (isNaN(num) ? 1 : num) * 1000;
         }
       }
       const num = parseFloat(val);
@@ -247,12 +252,6 @@ function Currency({ isSuper }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
               >
-                <Form.Control
-                  type="text"
-                  value={c.amount}
-                  onFocus={() => setBaseIndex(idx)}
-                  onChange={(e) => handleAmountChange(idx, e.target.value)}
-                />
                 <Form.Select
                   value={c.code}
                   onChange={(e) => handleCurrencyChange(idx, e.target.value)}
@@ -263,6 +262,23 @@ function Currency({ isSuper }) {
                     </option>
                   ))}
                 </Form.Select>
+                <Form.Control
+                  type="text"
+                  inputMode="decimal"
+                  pattern="[0-9]*"
+                  value={c.amount}
+                  onKeyDown={(e) => {
+                    const key = e.key.toLowerCase();
+                    if (key === "m" || key === "k") {
+                      e.preventDefault();
+                      const zeros = key === "m" ? "000000" : "000";
+                      const cleaned = String(e.target.value).replace(/\D/g, "");
+                      handleAmountChange(idx, cleaned + zeros);
+                    }
+                  }}
+                  onFocus={() => setBaseIndex(idx)}
+                  onChange={(e) => handleAmountChange(idx, e.target.value)}
+                />
                 {currencies.length >= 3 && (
                   <Button
                     variant="danger"

@@ -42,7 +42,7 @@ body {
 }
 
 .container {
-  padding-top: 100px;
+  padding-top: 60px;
 }
 
 body.dark {
@@ -50,10 +50,26 @@ body.dark {
   color: #f1f1f1;
 }
 
+.logo-band {
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 0;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+body.dark .logo-band {
+  background-color: #333333;
+}
+
 .logo {
-  width: 300px;
+  width: 350px;
+  height: 60px;
   display: block;
-  margin: 0 auto 20px;
+  object-fit: contain;
   cursor: default;
   user-select: none;
 }
@@ -179,14 +195,6 @@ select {
   appearance: none;
 }
 
-.dropdown::after {
-  content: "\25BC";
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  color: #6c5ce7;
-}
 
 .dropdown {
   position: relative;
@@ -302,4 +310,8 @@ body.dark .footer {
 .dateNavigator button:disabled {
   opacity: 0.25;
   cursor: not-allowed;
+}
+
+.react-datepicker-popper {
+  z-index: 100;
 }
