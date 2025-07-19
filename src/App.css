@@ -53,8 +53,9 @@ body.dark {
 .logo {
   width: 300px;
   display: block;
-  margin: 0 auto;
-  cursor: pointer;
+  margin: 0 auto 20px;
+  cursor: default;
+  user-select: none;
 }
 
 .currencyContainer {
@@ -77,6 +78,7 @@ body.dark {
   padding: 20px;
   position: relative;
   transition: transform 0.3s ease;
+  max-width: 600px;
 }
 
 body.dark .currencyDiv {
@@ -131,6 +133,27 @@ input[type="date"] {
   background-color: #f8f8f8;
 }
 
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  border: 1px solid #6c5ce7;
+  border-radius: 4px;
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  background-color: #f8f8f8;
+  color: inherit;
+}
+
+body.dark .react-datepicker__input-container input {
+  background-color: #444;
+  color: #fff;
+}
+
 input[type="number"] {
   border: none;
   border-bottom: 2px solid #6c5ce7;
@@ -174,9 +197,10 @@ select {
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
+  width: 100%;
 }
 
-.currencyRow input[type="number"] {
+.currencyRow input[type="text"] {
   width: 60%;
 }
 
@@ -239,11 +263,11 @@ body.dark .footer {
 
 .currencyDiv .minusIcon {
   color: #db4437 !important;
-  margin-left: 10px;
   cursor: pointer;
   transition: transform 0.2s ease;
   width: auto;
   padding: 5px 10px;
+  margin-left: auto;
 }
 
 .minusIcon:hover {
