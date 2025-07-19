@@ -278,3 +278,13 @@ body.dark .footer {
   opacity: 0.5;
   cursor: not-allowed;
 }
+.assetDownloader {
+  margin: 20px auto;
+  text-align: center;
+}
+.assetDownloader input {
+  margin-bottom: 10px;
+}
+.assetDownloader button {
+  width: auto;
+}
