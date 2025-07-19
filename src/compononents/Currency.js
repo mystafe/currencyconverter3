@@ -119,16 +119,8 @@ function Currency({ isSuper }) {
   const [baseIndex, setBaseIndex] = useState(0);
 
   const nextDayDisabled = currencyTime >= today;
-  const nextMonthDisabled = (() => {
-    const d = new Date(currencyTime);
-    d.setMonth(d.getMonth() + 1);
-    return d.toISOString().slice(0, 10) > today;
-  })();
-  const nextYearDisabled = (() => {
-    const d = new Date(currencyTime);
-    d.setFullYear(d.getFullYear() + 1);
-    return d.toISOString().slice(0, 10) > today;
-  })();
+  const nextMonthDisabled = currencyTime >= today;
+  const nextYearDisabled = currencyTime >= today;
 
   const changeDate = (days) => {
     const d = new Date(currencyTime);
@@ -142,7 +134,10 @@ function Currency({ isSuper }) {
     const d = new Date(currencyTime);
     d.setMonth(d.getMonth() + months);
     const newDate = d.toISOString().slice(0, 10);
-    if (newDate > today) return;
+    if (months > 0 && newDate > today) {
+      handleDateSelection({ target: { value: today } });
+      return;
+    }
     handleDateSelection({ target: { value: newDate } });
   };
 
@@ -150,7 +145,10 @@ function Currency({ isSuper }) {
     const d = new Date(currencyTime);
     d.setFullYear(d.getFullYear() + years);
     const newDate = d.toISOString().slice(0, 10);
-    if (newDate > today) return;
+    if (years > 0 && newDate > today) {
+      handleDateSelection({ target: { value: today } });
+      return;
+    }
     handleDateSelection({ target: { value: newDate } });
   };
 

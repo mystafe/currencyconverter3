@@ -42,7 +42,7 @@ body {
 }
 
 .container {
-  padding-top: 60px;
+  padding-top: 100px;
 }
 
 body.dark {
@@ -51,10 +51,9 @@ body.dark {
 }
 
 .logo {
-  width: 50px;
-  position: absolute;
-  top: 10px;
-  left: 10px;
+  width: 100px;
+  display: block;
+  margin: 0 auto;
   cursor: pointer;
 }
 
@@ -121,15 +120,15 @@ body.dark .currencyDiv {
 }
 
 input[type="date"] {
-  border: none;
-  border-bottom: 2px solid #6c5ce7;
-  border-radius: 0;
+  border: 1px solid #6c5ce7;
+  border-radius: 4px;
   width: 100%;
-  padding: 10px 0;
+  padding: 8px 12px;
   margin-top: 15px;
   margin-bottom: 20px;
   font-size: 16px;
   color: #444;
+  background-color: #f8f8f8;
 }
 
 input[type="number"] {
@@ -243,6 +242,8 @@ body.dark .footer {
   margin-left: 10px;
   cursor: pointer;
   transition: transform 0.2s ease;
+  width: auto;
+  padding: 5px 10px;
 }
 
 .minusIcon:hover {
@@ -275,6 +276,6 @@ body.dark .footer {
 }
 
 .dateNavigator button:disabled {
-  opacity: 0.5;
+  opacity: 0.25;
   cursor: not-allowed;
 }
