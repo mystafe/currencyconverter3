@@ -33,7 +33,9 @@ function App() {
 
   return (
     <div className="container">
-      <img src={logo} alt="logo" className="logo" onClick={handleLogoClick} />
+      <div className="logo-band">
+        <img src={logo} alt="logo" className="logo" onClick={handleLogoClick} />
+      </div>
       {superMode && (
         <button className="themeToggle" onClick={toggleTheme}>
           {theme === "dark" ? "☀️" : "🌙"}
