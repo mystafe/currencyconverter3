@@ -43,6 +43,9 @@ body {
 
 .container {
   padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 body.dark {
@@ -236,18 +239,20 @@ button {
 }
 
 .footer {
-  background-color: #2b2b2b;
+  background-color: #f3f3f3;
+  color: #333;
   text-align: center;
   padding: 20px 0;
-  color: #ffffff;
   font-size: 14px;
   width: 100%;
-  border-top: 3px solid #ffffff;
+  border-top: 3px solid #cccccc;
+  margin-top: auto;
 }
 
 body.dark .footer {
-  background-color: #111111;
-  border-top-color: #ffffff;
+  background-color: #2a2a2a;
+  color: #f1f1f1;
+  border-top-color: #555;
 }
 
 .footer p {

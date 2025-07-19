@@ -111,9 +111,10 @@ const fetchRate = async (from, to, date) => {
 
 function Currency({ isSuper, onTitleClick }) {
   const [currencies, setCurrencies] = useState([
-    { code: "EUR", amount: 1, rate: 1 },
+    { code: "USD", amount: 1, rate: 1 },
     { code: "TRY", amount: 0, rate: 0 },
     { code: "AED", amount: 0, rate: 0 },
+    { code: "EUR", amount: 0, rate: 0 },
   ]);
   const today = new Date().toISOString().slice(0, 10);
   const [currencyTime, setCurrencyTime] = useState(today);
