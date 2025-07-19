@@ -109,7 +109,7 @@ const fetchRate = async (from, to, date) => {
   return data.rates[to];
 };
 
-function Currency({ isSuper }) {
+function Currency({ isSuper, onTitleClick }) {
   const [currencies, setCurrencies] = useState([
     { code: "USD", amount: 1, rate: 1 },
     { code: "TRY", amount: 0, rate: 0 },
@@ -240,6 +240,7 @@ function Currency({ isSuper }) {
 
   return (
     <div className="currencyDiv">
+      <h1 onClick={onTitleClick}>Currency Calculator</h1>
       <div className="currencySelection">
         <div className="dropdown">
           <AnimatePresence>
@@ -341,6 +342,7 @@ function Currency({ isSuper }) {
             }
             maxDate={new Date()}
             dateFormat="yyyy-MM-dd"
+            showYearDropdown
           />
           <Button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
             {">"}
@@ -362,6 +364,7 @@ function Currency({ isSuper }) {
           }
           maxDate={new Date()}
           dateFormat="yyyy-MM-dd"
+          showYearDropdown
         />
       )}
     </div>

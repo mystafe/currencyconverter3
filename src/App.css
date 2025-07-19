@@ -42,7 +42,7 @@ body {
 }
 
 .container {
-  padding-top: 60px;
+  padding-top: 20px;
 }
 
 body.dark {
@@ -50,29 +50,6 @@ body.dark {
   color: #f1f1f1;
 }
 
-.logo-band {
-  width: 100%;
-  background-color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px 0;
-  margin-bottom: 10px;
-  border-radius: 10px;
-}
-
-body.dark .logo-band {
-  background-color: #333333;
-}
-
-.logo {
-  width: 350px;
-  height: 60px;
-  display: block;
-  object-fit: contain;
-  cursor: default;
-  user-select: none;
-}
 
 .currencyContainer {
   display: flex;
@@ -163,6 +140,26 @@ input[type="date"] {
   font-size: 16px;
   background-color: #f8f8f8;
   color: inherit;
+}
+
+.react-datepicker {
+  background-color: #333;
+  border: 1px solid #555;
+  color: #fff;
+}
+
+.react-datepicker__header {
+  background-color: #444;
+  border-bottom: 1px solid #555;
+}
+
+body.dark .react-datepicker {
+  background-color: #222;
+}
+
+body.dark .react-datepicker__header {
+  background-color: #333;
+  border-bottom: 1px solid #555;
 }
 
 body.dark .react-datepicker__input-container input {
@@ -258,7 +255,7 @@ body.dark .footer {
 
 .currencyDiv .plusIcon {
   text-align: center;
-  font-size: 2rem;
+  font-size: 1rem;
   margin-top: 10px;
   color: #0f9d58 !important;
   cursor: pointer;
@@ -314,4 +311,11 @@ body.dark .footer {
 
 .react-datepicker-popper {
   z-index: 100;
+}
+
+@media (max-width: 576px) {
+  .dateNavigator button {
+    font-size: 0.8rem;
+    padding: 2px 5px;
+  }
 }
