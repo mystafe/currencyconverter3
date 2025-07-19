@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import { Form, Button } from "react-bootstrap";
+import { AnimatePresence, motion } from "framer-motion";
 
 const currencySymbols = {
   AUD: "A$",
@@ -114,6 +116,7 @@ function Currency({ isSuper }) {
   const today = new Date().toISOString().slice(0, 10);
   const [currencyTime, setCurrencyTime] = useState(today);
   const [showAdd, setShowAdd] = useState(false);
+  const [baseIndex, setBaseIndex] = useState(0);
 
   const nextDayDisabled = currencyTime >= today;
   const nextMonthDisabled = (() => {
@@ -163,14 +166,15 @@ function Currency({ isSuper }) {
     );
   };
 
-  const codesList = currencies.slice(1).map((c) => c.code).join();
+  const codesList = currencies.map((c) => c.code).join();
   useEffect(() => {
     const updateRates = async () => {
       try {
-        const base = currencies[0];
+        const base = currencies[baseIndex];
         const updated = await Promise.all(
           currencies.map(async (c, idx) => {
-            if (idx === 0) return { ...c, rate: 1, amount: base.amount };
+            if (idx === baseIndex)
+              return { ...c, rate: 1, amount: base.amount };
             const rate = await fetchRate(base.code, c.code, currencyTime);
             return { ...c, rate, amount: (base.amount * rate).toFixed(2) };
           })
@@ -181,27 +185,18 @@ function Currency({ isSuper }) {
       }
     };
     updateRates();
-  }, [currencyTime, currencies[0].code, currencies[0].amount, codesList]);
+  }, [currencyTime, baseIndex, currencies[baseIndex].code, currencies[baseIndex].amount, codesList]);
 
-  const handleBaseAmountChange = (e) => {
-    const value = e.target.value;
-    setCurrencies((prev) =>
-      prev.map((c, idx) =>
-        idx === 0 ? { ...c, amount: value } : { ...c, amount: (value * c.rate).toFixed(2) }
-      )
-    );
-  };
-
-  const handleTargetAmountChange = (index, value) => {
+  const handleAmountChange = (index, value) => {
     setCurrencies((prev) => {
-      const rate = prev[index].rate;
-      const baseAmount = rate ? (value / rate).toFixed(2) : 0;
+      const baseAmountOld = prev[index].rate ? value / prev[index].rate : value;
       return prev.map((c, idx) =>
-        idx === 0
-          ? { ...c, amount: baseAmount }
-          : { ...c, amount: (idx === index ? value : (baseAmount * c.rate).toFixed(2)), rate: c.rate }
+        idx === index
+          ? { ...c, amount: value }
+          : { ...c, amount: (baseAmountOld * c.rate).toFixed(2), rate: c.rate }
       );
     });
+    setBaseIndex(index);
   };
 
   const handleCurrencyChange = (index, code) => {
@@ -212,7 +207,15 @@ function Currency({ isSuper }) {
 
   const handleRemoveCurrency = (index) => {
     if (window.confirm("Remove currency?")) {
-      setCurrencies((prev) => prev.filter((_, i) => i !== index));
+      setCurrencies((prev) => {
+        const filtered = prev.filter((_, i) => i !== index);
+        if (baseIndex >= filtered.length) {
+          setBaseIndex(filtered.length - 1);
+        } else if (index < baseIndex) {
+          setBaseIndex((b) => b - 1);
+        }
+        return filtered;
+      });
     }
   };
 
@@ -221,39 +224,46 @@ function Currency({ isSuper }) {
       <h1>💰Currency Calculator</h1>
       <div className="currencySelection">
         <div className="dropdown">
-          {currencies.map((c, idx) => (
-            <div className="currencyRow" key={idx}>
-              <input
-                type="number"
-                value={c.amount}
-                onChange={(e) =>
-                  idx === 0
-                    ? handleBaseAmountChange(e)
-                    : handleTargetAmountChange(idx, e.target.value)
-                }
-              />
-              <select
-                value={c.code}
-                onChange={(e) => handleCurrencyChange(idx, e.target.value)}
+          <AnimatePresence>
+            {currencies.map((c, idx) => (
+              <motion.div
+                className="currencyRow"
+                key={idx}
+                layout
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
               >
-                {currencyCodes.map((code) => (
-                  <option key={code} value={code}>
-                    {`${getSymbol(code)} (${code})`}
-                  </option>
-                ))}
-              </select>
-              {currencies.length >= 3 && (
-                <span
-                  className="minusIcon"
-                  onClick={() => handleRemoveCurrency(idx)}
+                <Form.Control
+                  type="number"
+                  value={c.amount}
+                  onFocus={() => setBaseIndex(idx)}
+                  onChange={(e) => handleAmountChange(idx, e.target.value)}
+                />
+                <Form.Select
+                  value={c.code}
+                  onChange={(e) => handleCurrencyChange(idx, e.target.value)}
                 >
-                  ➖
-                </span>
-              )}
-            </div>
-          ))}
+                  {currencyCodes.map((code) => (
+                    <option key={code} value={code}>
+                      {`${getSymbol(code)} (${code})`}
+                    </option>
+                  ))}
+                </Form.Select>
+                {currencies.length >= 3 && (
+                  <Button
+                    variant="danger"
+                    className="minusIcon"
+                    onClick={() => handleRemoveCurrency(idx)}
+                  >
+                    ➖
+                  </Button>
+                )}
+              </motion.div>
+            ))}
+          </AnimatePresence>
           {showAdd && (
-            <select
+            <Form.Select
               className="addSelect"
               onChange={(e) => {
                 if (!e.target.value) return;
@@ -275,21 +285,25 @@ function Currency({ isSuper }) {
                     {`${getSymbol(code)} (${code})`}
                   </option>
                 ))}
-            </select>
+            </Form.Select>
           )}
         </div>
       </div>
       {currencies.length < 6 && (
-        <div className="plusIcon" onClick={() => setShowAdd(!showAdd)}>
+        <Button
+          variant="success"
+          className="plusIcon"
+          onClick={() => setShowAdd(!showAdd)}
+        >
           ➕
-        </div>
+        </Button>
       )}
       {isSuper ? (
         <div className="dateNavigator">
-          <button onClick={() => changeYear(-1)}>{"<<<"}</button>
-          <button onClick={() => changeMonth(-1)}>{"<<"}</button>
-          <button onClick={() => changeDate(-1)}>{"<"}</button>
-          <input
+          <Button onClick={() => changeYear(-1)}>{"<<<"}</Button>
+          <Button onClick={() => changeMonth(-1)}>{"<<"}</Button>
+          <Button onClick={() => changeDate(-1)}>{"<"}</Button>
+          <Form.Control
             type="date"
             name="oldDateOther"
             id="oldDateOther"
@@ -297,18 +311,18 @@ function Currency({ isSuper }) {
             max={today}
             onChange={(e) => handleDateSelection(e)}
           />
-          <button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
+          <Button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
             {">"}
-          </button>
-          <button onClick={() => changeMonth(1)} disabled={nextMonthDisabled}>
+          </Button>
+          <Button onClick={() => changeMonth(1)} disabled={nextMonthDisabled}>
             {">>"}
-          </button>
-          <button onClick={() => changeYear(1)} disabled={nextYearDisabled}>
+          </Button>
+          <Button onClick={() => changeYear(1)} disabled={nextYearDisabled}>
             {">>>"}
-          </button>
+          </Button>
         </div>
       ) : (
-        <input
+        <Form.Control
           type="date"
           name="oldDateOther"
           id="oldDateOther"
@@ -316,12 +330,6 @@ function Currency({ isSuper }) {
           max={today}
           onChange={(e) => handleDateSelection(e)}
         />
-      )}
-      {currencies.length > 1 && (
-        <p>
-          1 {getSymbol(currencies[0].code)} ({currencies[0].code}) ={' '}
-          <strong>{currencies[1].rate}</strong> {getSymbol(currencies[1].code)} ({currencies[1].code})
-        </p>
       )}
     </div>
   );
