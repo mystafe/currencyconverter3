@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { AnimatePresence, motion } from "framer-motion";
 
 const currencySymbols = {
@@ -186,11 +188,25 @@ function Currency({ isSuper }) {
   }, [currencyTime, baseIndex, currencies[baseIndex].code, currencies[baseIndex].amount, codesList]);
 
   const handleAmountChange = (index, value) => {
+    const parseValue = (val) => {
+      if (typeof val === "string") {
+        const upper = val.trim().toUpperCase();
+        if (upper === "M") return 1000000;
+        if (upper.endsWith("M")) {
+          const num = parseFloat(upper.slice(0, -1));
+          return (isNaN(num) ? 1 : num) * 1000000;
+        }
+      }
+      const num = parseFloat(val);
+      return isNaN(num) ? 0 : num;
+    };
+    let amount = parseValue(value);
+    if (amount < 0) amount = 0;
     setCurrencies((prev) => {
-      const baseAmountOld = prev[index].rate ? value / prev[index].rate : value;
+      const baseAmountOld = prev[index].rate ? amount / prev[index].rate : amount;
       return prev.map((c, idx) =>
         idx === index
-          ? { ...c, amount: value }
+          ? { ...c, amount }
           : { ...c, amount: (baseAmountOld * c.rate).toFixed(2), rate: c.rate }
       );
     });
@@ -232,7 +248,7 @@ function Currency({ isSuper }) {
                 exit={{ opacity: 0, y: 10 }}
               >
                 <Form.Control
-                  type="number"
+                  type="text"
                   value={c.amount}
                   onFocus={() => setBaseIndex(idx)}
                   onChange={(e) => handleAmountChange(idx, e.target.value)}
@@ -300,13 +316,15 @@ function Currency({ isSuper }) {
           <Button onClick={() => changeYear(-1)}>{"<<<"}</Button>
           <Button onClick={() => changeMonth(-1)}>{"<<"}</Button>
           <Button onClick={() => changeDate(-1)}>{"<"}</Button>
-          <Form.Control
-            type="date"
-            name="oldDateOther"
-            id="oldDateOther"
-            value={currencyTime}
-            max={today}
-            onChange={(e) => handleDateSelection(e)}
+          <DatePicker
+            selected={new Date(currencyTime)}
+            onChange={(date) =>
+              handleDateSelection({
+                target: { value: date.toISOString().slice(0, 10) },
+              })
+            }
+            maxDate={new Date()}
+            dateFormat="yyyy-MM-dd"
           />
           <Button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
             {">"}
@@ -319,13 +337,15 @@ function Currency({ isSuper }) {
           </Button>
         </div>
       ) : (
-        <Form.Control
-          type="date"
-          name="oldDateOther"
-          id="oldDateOther"
-          value={currencyTime}
-          max={today}
-          onChange={(e) => handleDateSelection(e)}
+        <DatePicker
+          selected={new Date(currencyTime)}
+          onChange={(date) =>
+            handleDateSelection({
+              target: { value: date.toISOString().slice(0, 10) },
+            })
+          }
+          maxDate={new Date()}
+          dateFormat="yyyy-MM-dd"
         />
       )}
     </div>
