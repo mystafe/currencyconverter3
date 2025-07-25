@@ -406,7 +406,7 @@ body.dark .footer {
   color: #0f9d58 !important;
   cursor: pointer;
   transition: transform 0.2s ease;
-  width: auto;
+  width: 100%;
   padding: 5px 20px;
 }
 
