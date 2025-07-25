@@ -446,6 +446,16 @@ body.dark .footer {
   width: 45%;
 }
 
+.dateRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.dateRow .react-datepicker-wrapper {
+  flex: 1;
+}
+
 @keyframes scaleIcon {
   0% {
     transform: scale(1);
@@ -484,6 +494,13 @@ body.dark .footer {
   .dateNavigator button {
     font-size: 0.8rem;
     padding: 2px 5px;
+  }
+  .presetRow {
+    gap: 5px;
+  }
+  .presetRow button {
+    font-size: 0.6rem;
+    padding: 2px 6px;
   }
   .currencyDiv h1 {
     font-size: 16px;
