@@ -233,6 +233,13 @@ button {
   right: 10px;
 }
 
+.langToggle {
+  width: auto;
+  position: absolute;
+  top: 10px;
+  right: 60px;
+}
+
 #getUsdCurrencyBtn,
 #getUsdCurrencyOldBtn {
   background-color: #30931c;
@@ -240,18 +247,18 @@ button {
 
 .footer {
   background-color: #f3f3f3;
-  color: #333;
+  color: #666;
   text-align: center;
-  padding: 20px 0;
-  font-size: 14px;
+  padding: 10px 0;
+  font-size: 12px;
   width: 100%;
-  border-top: 3px solid #cccccc;
+  border-top: 1px solid #cccccc;
   margin-top: auto;
 }
 
 body.dark .footer {
   background-color: #2a2a2a;
-  color: #f1f1f1;
+  color: #aaa;
   border-top-color: #555;
 }
 
