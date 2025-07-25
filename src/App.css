@@ -104,6 +104,10 @@ body.dark .currencyDiv {
   color: inherit;
   font-size: 20px;
   text-transform: uppercase;
+  border: 2px solid rgb(108, 92, 231);
+  display: inline-block;
+  padding: 4px 8px;
+  white-space: nowrap;
 }
 
 .currencyDiv button {
@@ -390,5 +394,9 @@ body.dark .footer {
   }
   .currencyDiv h1 {
     font-size: 18px;
+    border: 2px solid rgb(108, 92, 231);
+    display: inline-block;
+    padding: 4px 8px;
+    white-space: nowrap;
   }
 }
