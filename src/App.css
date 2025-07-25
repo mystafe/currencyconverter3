@@ -192,6 +192,11 @@ input[type="date"] {
   color: rgb(108, 92, 231);
 }
 
+body.dark .react-datepicker__current-month,
+body.dark .react-datepicker-year-header {
+  color: rgb(108, 92, 231);
+}
+
 .react-datepicker__navigation-icon::before,
 .react-datepicker__year-read-view--down-arrow,
 .react-datepicker__month-read-view--down-arrow,
@@ -201,8 +206,14 @@ input[type="date"] {
   border-color: rgb(108, 92, 231);
 }
 
+.react-datepicker__year-option,
 .react-datepicker__year-option--selected {
   color: rgb(108, 92, 231);
+}
+
+.react-datepicker__navigation--years-previous,
+.react-datepicker__navigation--years-upcoming {
+  background-color: transparent;
 }
 
 body.dark .react-datepicker {
