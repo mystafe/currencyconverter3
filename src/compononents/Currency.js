@@ -295,6 +295,13 @@ function Currency({ isSuper, onTitleClick }) {
   const prevMonthDisabled = currencyTime <= MIN_DATE;
   const prevYearDisabled = currencyTime <= MIN_DATE;
 
+  const compareNextDayDisabled = !compareTime || compareTime >= today;
+  const compareNextMonthDisabled = !compareTime || compareTime >= today;
+  const compareNextYearDisabled = !compareTime || compareTime >= today;
+  const comparePrevDayDisabled = !compareTime || compareTime <= MIN_DATE;
+  const comparePrevMonthDisabled = !compareTime || compareTime <= MIN_DATE;
+  const comparePrevYearDisabled = !compareTime || compareTime <= MIN_DATE;
+
   const changeDate = (days) => {
     const d = new Date(currencyTime);
     d.setDate(d.getDate() + days);
@@ -320,6 +327,36 @@ function Currency({ isSuper, onTitleClick }) {
     if (years > 0 && newDate > today) newDate = today;
     if (years < 0 && newDate < MIN_DATE) newDate = MIN_DATE;
     handleDateSelection({ target: { value: newDate } });
+  };
+
+  const changeCompareDate = (days) => {
+    if (!compareTime) return;
+    const d = new Date(compareTime);
+    d.setDate(d.getDate() + days);
+    let newDate = d.toISOString().slice(0, 10);
+    if (days < 0 && newDate < MIN_DATE) newDate = MIN_DATE;
+    if (days > 0 && newDate > today) return;
+    setCompareTime(newDate);
+  };
+
+  const changeCompareMonth = (months) => {
+    if (!compareTime) return;
+    const d = new Date(compareTime);
+    d.setMonth(d.getMonth() + months);
+    let newDate = d.toISOString().slice(0, 10);
+    if (months > 0 && newDate > today) newDate = today;
+    if (months < 0 && newDate < MIN_DATE) newDate = MIN_DATE;
+    setCompareTime(newDate);
+  };
+
+  const changeCompareYear = (years) => {
+    if (!compareTime) return;
+    const d = new Date(compareTime);
+    d.setFullYear(d.getFullYear() + years);
+    let newDate = d.toISOString().slice(0, 10);
+    if (years > 0 && newDate > today) newDate = today;
+    if (years < 0 && newDate < MIN_DATE) newDate = MIN_DATE;
+    setCompareTime(newDate);
   };
 
   const handleDateSelection = (e) => {
@@ -544,10 +581,68 @@ function Currency({ isSuper, onTitleClick }) {
         )}
       </div>
       {isSuper ? (
-        <div className="dateNavigator">
-          <Button onClick={() => changeYear(-1)} disabled={prevYearDisabled}>{"<<<"}</Button>
-          <Button onClick={() => changeMonth(-1)} disabled={prevMonthDisabled}>{"<<"}</Button>
-          <Button onClick={() => changeDate(-1)} disabled={prevDayDisabled}>{"<"}</Button>
+        <>
+          <div className="dateNavigator">
+            <Button onClick={() => changeYear(-1)} disabled={prevYearDisabled}>{"<<<"}</Button>
+            <Button onClick={() => changeMonth(-1)} disabled={prevMonthDisabled}>{"<<"}</Button>
+            <Button onClick={() => changeDate(-1)} disabled={prevDayDisabled}>{"<"}</Button>
+            <DatePicker
+              selected={new Date(currencyTime)}
+              onChange={(date) =>
+                handleDateSelection({
+                  target: { value: date.toISOString().slice(0, 10) },
+                })
+              }
+              maxDate={new Date()}
+              minDate={new Date(MIN_DATE)}
+              dateFormat="yyyy-MM-dd"
+              showYearDropdown
+              dropdownMode="select"
+              inputReadOnly
+              withPortal={isMobile}
+            />
+            <Button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
+              {">"}
+            </Button>
+            <Button onClick={() => changeMonth(1)} disabled={nextMonthDisabled}>
+              {">>"}
+            </Button>
+            <Button onClick={() => changeYear(1)} disabled={nextYearDisabled}>
+              {">>>"}
+            </Button>
+          </div>
+          {compareTime && (
+            <div className="dateNavigator">
+              <Button onClick={() => changeCompareYear(-1)} disabled={comparePrevYearDisabled}>{"<<<"}</Button>
+              <Button onClick={() => changeCompareMonth(-1)} disabled={comparePrevMonthDisabled}>{"<<"}</Button>
+              <Button onClick={() => changeCompareDate(-1)} disabled={comparePrevDayDisabled}>{"<"}</Button>
+              <DatePicker
+                selected={new Date(compareTime)}
+                onChange={(date) =>
+                  setCompareTime(date.toISOString().slice(0, 10))
+                }
+                maxDate={new Date()}
+                minDate={new Date(MIN_DATE)}
+                dateFormat="yyyy-MM-dd"
+                showYearDropdown
+                dropdownMode="select"
+                inputReadOnly
+                withPortal={isMobile}
+              />
+              <Button onClick={() => changeCompareDate(1)} disabled={compareNextDayDisabled}>
+                {">"}
+              </Button>
+              <Button onClick={() => changeCompareMonth(1)} disabled={compareNextMonthDisabled}>
+                {">>"}
+              </Button>
+              <Button onClick={() => changeCompareYear(1)} disabled={compareNextYearDisabled}>
+                {">>>"}
+              </Button>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="dateRow">
           <DatePicker
             selected={new Date(currencyTime)}
             onChange={(date) =>
@@ -563,51 +658,23 @@ function Currency({ isSuper, onTitleClick }) {
             inputReadOnly
             withPortal={isMobile}
           />
-          <Button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
-            {">"}
-          </Button>
-          <Button onClick={() => changeMonth(1)} disabled={nextMonthDisabled}>
-            {">>"}
-          </Button>
-          <Button onClick={() => changeYear(1)} disabled={nextYearDisabled}>
-            {">>>"}
-          </Button>
+          {compareTime && (
+            <DatePicker
+              selected={new Date(compareTime)}
+              onChange={(date) =>
+                setCompareTime(date.toISOString().slice(0, 10))
+              }
+              maxDate={new Date()}
+              minDate={new Date(MIN_DATE)}
+              dateFormat="yyyy-MM-dd"
+              showYearDropdown
+              dropdownMode="select"
+              inputReadOnly
+              withPortal={isMobile}
+            />
+          )}
         </div>
-      ) : null}
-      <div className="dateRow">
-        {!isSuper && (
-          <DatePicker
-            selected={new Date(currencyTime)}
-            onChange={(date) =>
-              handleDateSelection({
-                target: { value: date.toISOString().slice(0, 10) },
-              })
-            }
-            maxDate={new Date()}
-            minDate={new Date(MIN_DATE)}
-            dateFormat="yyyy-MM-dd"
-            showYearDropdown
-            dropdownMode="select"
-            inputReadOnly
-            withPortal={isMobile}
-          />
-        )}
-        {compareTime && (
-          <DatePicker
-            selected={new Date(compareTime)}
-            onChange={(date) =>
-              setCompareTime(date.toISOString().slice(0, 10))
-            }
-            maxDate={new Date()}
-            minDate={new Date(MIN_DATE)}
-            dateFormat="yyyy-MM-dd"
-            showYearDropdown
-            dropdownMode="select"
-            inputReadOnly
-            withPortal={isMobile}
-          />
-        )}
-      </div>
+      )}
     </div>
   );
 }
