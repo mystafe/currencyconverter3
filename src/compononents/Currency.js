@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
+import { useTranslation } from 'react-i18next';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { AnimatePresence, motion } from "framer-motion";
@@ -242,6 +243,7 @@ const fetchRate = async (from, to, date) => {
 };
 
 function Currency({ isSuper, onTitleClick }) {
+  const { t } = useTranslation();
   const [currencies, setCurrencies] = useState([
     { code: "USD", amount: 1, rate: 1 },
     { code: "TRY", amount: 0, rate: 0 },
@@ -358,7 +360,7 @@ function Currency({ isSuper, onTitleClick }) {
   };
 
   const handleRemoveCurrency = (index) => {
-    if (window.confirm("Remove currency?")) {
+    if (window.confirm(t('remove_confirm'))) {
       setCurrencies((prev) => {
         const filtered = prev.filter((_, i) => i !== index);
         if (baseIndex >= filtered.length) {
@@ -373,7 +375,7 @@ function Currency({ isSuper, onTitleClick }) {
 
   return (
     <div className="currencyDiv">
-      <h1 onClick={onTitleClick}>Currency Calculator</h1>
+      <h1 onClick={onTitleClick}>{t('title')}</h1>
       <div className="currencySelection">
         <div className="dropdown">
           <AnimatePresence>
@@ -439,7 +441,7 @@ function Currency({ isSuper, onTitleClick }) {
               defaultValue=""
             >
               <option value="" disabled>
-                Select currency
+                {t('select_currency')}
               </option>
               {currencyCodes
                 .filter((code) => !currencies.some((c) => c.code === code))
