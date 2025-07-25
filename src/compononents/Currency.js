@@ -659,7 +659,7 @@ function Currency({ isSuper, onTitleClick }) {
           )}
         </>
       ) : (
-        <div className="dateRow">
+        <div className={`dateRow${compareTime ? '' : ' single'}`}>
           <DatePicker
             selected={new Date(currencyTime)}
             onChange={(date) =>
