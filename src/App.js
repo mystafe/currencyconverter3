@@ -45,7 +45,9 @@ function App() {
       );
       if (!resp.ok) throw new Error('Request failed');
       const data = await resp.json();
-      alert(`Remaining requests: ${data.usage.requests_remaining}`);
+      const usage = data.usage || data.data?.usage;
+      if (!usage) throw new Error('Malformed response');
+      alert(`Remaining requests: ${usage.requests_remaining}`);
     } catch {
       alert('Failed to fetch usage info');
     }

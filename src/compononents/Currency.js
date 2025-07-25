@@ -484,7 +484,7 @@ function Currency({ isSuper, onTitleClick }) {
           className="plusIcon"
           onClick={() => setShowAdd(!showAdd)}
         >
-          ➕
+          {showAdd ? "➖" : "➕"}
         </Button>
       )}
       {isSuper ? (
