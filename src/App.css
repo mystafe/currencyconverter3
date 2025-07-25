@@ -46,6 +46,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding-bottom: 60px;
 }
 
 body.dark {
@@ -254,6 +255,9 @@ button {
   width: 100%;
   border-top: 1px solid #cccccc;
   margin-top: auto;
+  position: fixed;
+  bottom: 0;
+  left: 0;
 }
 
 body.dark .footer {
@@ -269,6 +273,15 @@ body.dark .footer {
 
 .footer a {
   color: #61dafb;
+}
+
+.footer .dataSources {
+  font-size: 10px;
+}
+
+.footer .dataSources a {
+  color: #888;
+  text-decoration: none;
 }
 
 .currencyDiv .plusIcon {
