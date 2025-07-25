@@ -252,6 +252,13 @@ function Currency({ isSuper, onTitleClick }) {
   const [currencyTime, setCurrencyTime] = useState(today);
   const [showAdd, setShowAdd] = useState(false);
   const [baseIndex, setBaseIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 576);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 576);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const nextDayDisabled = currencyTime >= today;
   const nextMonthDisabled = currencyTime >= today;
@@ -470,6 +477,7 @@ function Currency({ isSuper, onTitleClick }) {
             minDate={new Date(MIN_DATE)}
             dateFormat="yyyy-MM-dd"
             showYearDropdown
+            withPortal={isMobile}
           />
           <Button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
             {">"}
@@ -493,6 +501,7 @@ function Currency({ isSuper, onTitleClick }) {
           minDate={new Date(MIN_DATE)}
           dateFormat="yyyy-MM-dd"
           showYearDropdown
+          withPortal={isMobile}
         />
       )}
     </div>
