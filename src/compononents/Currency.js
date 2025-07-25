@@ -504,7 +504,7 @@ function Currency({ isSuper, onTitleClick }) {
             dateFormat="yyyy-MM-dd"
             showYearDropdown
             dropdownMode="select"
-            readOnly
+            inputReadOnly
             withPortal={isMobile}
           />
           <Button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
@@ -530,7 +530,7 @@ function Currency({ isSuper, onTitleClick }) {
         dateFormat="yyyy-MM-dd"
         showYearDropdown
         dropdownMode="select"
-        readOnly
+        inputReadOnly
         withPortal={isMobile}
       />
       )}
