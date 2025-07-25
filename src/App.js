@@ -44,7 +44,7 @@ function App() {
             {theme === "dark" ? "☀️" : "🌙"}
           </button>
           <button className="langToggle" onClick={toggleLanguage}>
-            {i18n.language === 'tr' ? 'EN' : 'TR'}
+            {i18n.language === 'tr' ? '🇬🇧' : '🇹🇷'}
           </button>
         </>
       )}

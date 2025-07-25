@@ -10,7 +10,7 @@ function Footer() {
         <p>
           Developed by Mustafa Evleksiz - 2025 - v{packageJson.version}
         </p>
-        <p>
+        <p className="dataSources">
           {t('exchange_rates_from')} {" "}
           <a href="https://frankfurter.dev" target="_blank" rel="noreferrer">
             frankfurter.dev
