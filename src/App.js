@@ -32,13 +32,32 @@ function App() {
     });
   };
 
+  const clearCache = () => {
+    localStorage.clear();
+    alert('Cache cleared');
+    window.location.reload();
+  };
+
+  const checkUsage = async () => {
+    try {
+      const resp = await fetch(
+        `https://openexchangerates.org/api/usage.json?app_id=${process.env.REACT_APP_APP_ID}&prettyprint=true`
+      );
+      if (!resp.ok) throw new Error('Request failed');
+      const data = await resp.json();
+      alert(`Remaining requests: ${data.usage.requests_remaining}`);
+    } catch {
+      alert('Failed to fetch usage info');
+    }
+  };
+
   useEffect(() => {
     document.body.className = theme;
   }, [theme]);
 
   return (
     <div className="container">
-      {superMode && (
+        {superMode && (
         <>
           <button className="themeToggle" onClick={toggleTheme}>
             {theme === "dark" ? "☀️" : "🌙"}
@@ -46,6 +65,8 @@ function App() {
           <button className="langToggle" onClick={toggleLanguage}>
             {i18n.language === 'tr' ? '🇬🇧' : '🇹🇷'}
           </button>
+          <button className="cacheClear" onClick={clearCache}>🗑️</button>
+          <button className="usageCheck" onClick={checkUsage}>📈</button>
         </>
       )}
       <Currency isSuper={superMode} onTitleClick={handleTitleClick} />
