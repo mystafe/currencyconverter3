@@ -65,7 +65,7 @@ body.dark {
 }
 
 .currencyDiv {
-  width: 80vw;
+  width: 90vw;
   margin: 20px auto;
   background-color: #ffffff;
   border-radius: 8px;
@@ -75,7 +75,7 @@ body.dark {
   padding: 20px;
   position: relative;
   transition: transform 0.3s ease;
-  max-width: 600px;
+  max-width: 700px;
 }
 
 body.dark .currencyDiv {
@@ -219,7 +219,12 @@ select {
 }
 
 .currencyRow input[type="text"] {
-  width: 60%;
+  width: 70%;
+}
+
+.currencyRow select {
+  width: 25%;
+  font-size: 14px;
 }
 
 button {
@@ -301,8 +306,8 @@ body.dark .footer {
   color: #db4437 !important;
   cursor: pointer;
   transition: transform 0.2s ease;
-  width: auto;
-  padding: 5px 10px;
+  width: 30px;
+  padding: 3px 6px;
   margin-left: auto;
 }
 
