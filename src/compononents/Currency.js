@@ -38,12 +38,12 @@ const currencySymbols = {
   TRL: "₺",
   USD: "$",
   ZAR: "R",
-  AED: "Dr",
+  AED: "DH",
   SAR: "SAR",
-  XAU: "Gold",
-  XAG: "Silver",
-  XPT: "Platinum",
-  XPD: "Palladium",
+  XAU: "Gold (g)",
+  XAG: "Silver (g)",
+  XPT: "Platinum (g)",
+  XPD: "Palladium (g)",
 };
 
 const currencyCodes = [
@@ -125,7 +125,8 @@ const METAL_CODES = ["XAU", "XAG", "XPT", "XPD"];
 
 const OER_APP_ID = "e5f2b3b8c4b144b09ee8bee7b0128d3a";
 
-const ounceToGram = 31.1034768;
+const TROY_OUNCE_TO_GRAM = 31.1034768;
+// Convert metal prices from USD per troy ounce to USD per gram
 
 const fetchOpenRates = async (date) => {
   const key = `oer_${date}`;
@@ -144,7 +145,7 @@ const fetchOpenRates = async (date) => {
   const data = await resp.json();
   const rates = data.rates;
   METAL_CODES.forEach((m) => {
-    if (rates[m] != null) rates[m] *= ounceToGram;
+    if (rates[m] != null) rates[m] *= TROY_OUNCE_TO_GRAM; // convert to grams
   });
   localStorage.setItem(key, JSON.stringify(rates));
   return rates;
