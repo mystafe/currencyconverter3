@@ -213,7 +213,7 @@ body.dark .react-datepicker__day--outside-month {
 }
 
 .react-datepicker__day:hover {
-  background-color: rgb(108, 92, 231);
+  background-color: rgb(108, 92, 231) !important;
   color: #fff;
 }
 
