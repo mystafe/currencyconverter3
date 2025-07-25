@@ -36,7 +36,6 @@ const currencySymbols = {
   SGD: "S$",
   THB: "฿",
   TRY: "₺",
-  TRL: "₺",
   USD: "$",
   ZAR: "R",
   AED: "DH",
@@ -77,7 +76,6 @@ const currencyFlags = {
   SGD: "\uD83C\uDDF8\uD83C\uDDEC", // Singapore
   THB: "\uD83C\uDDF9\uD83C\uDDED", // Thailand
   TRY: "\uD83C\uDDF9\uD83C\uDDF7", // Turkey
-  TRL: "\uD83C\uDDF9\uD83C\uDDF7", // Turkey
   USD: "\uD83C\uDDFA\uD83C\uDDF8", // United States
   ZAR: "\uD83C\uDDFF\uD83C\uDDE6", // South Africa
   AED: "\uD83C\uDDE6\uD83C\uDDEA", // United Arab Emirates
@@ -123,7 +121,6 @@ const currencyCodes = [
   "USD",
   "ZAR",
   "AED",
-  "TRL",
   "SAR",
   "XAU",
   "XAG",
@@ -292,13 +289,6 @@ function Currency({ isSuper, onTitleClick }) {
   const handleDateSelection = (e) => {
     const val = e.target.value;
     setCurrencyTime(val);
-    setCurrencies((prev) =>
-      prev.map((c, idx) => {
-        if (val < "2005-01-01" && c.code === "TRY") return { ...c, code: "TRL" };
-        if (val >= "2005-01-01" && c.code === "TRL") return { ...c, code: "TRY" };
-        return c;
-      })
-    );
   };
 
   const codesList = currencies.map((c) => c.code).join();
