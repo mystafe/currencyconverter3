@@ -429,9 +429,19 @@ body.dark .footer {
 
 .presetRow {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 10px;
   margin-top: 10px;
+}
+
+.presetRow button {
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: normal;
+  line-height: 1;
 }
 
 .compareInput {
@@ -444,6 +454,16 @@ body.dark .footer {
 
 .compareMode .compareInput {
   width: 45%;
+}
+
+.dateRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.dateRow .react-datepicker-wrapper {
+  flex: 1;
 }
 
 @keyframes scaleIcon {
@@ -484,6 +504,13 @@ body.dark .footer {
   .dateNavigator button {
     font-size: 0.8rem;
     padding: 2px 5px;
+  }
+  .presetRow {
+    gap: 5px;
+  }
+  .presetRow button {
+    font-size: 0.6rem;
+    padding: 5px 20px;
   }
   .currencyDiv h1 {
     font-size: 16px;
