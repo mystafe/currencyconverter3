@@ -38,7 +38,12 @@ const currencySymbols = {
   TRL: "₺",
   USD: "$",
   ZAR: "R",
-  AED: "د.إ",
+  AED: "Dr",
+  SAR: "SAR",
+  XAU: "Gold",
+  XAG: "Silver",
+  XPT: "Platinum",
+  XPD: "Palladium",
 };
 
 const currencyCodes = [
@@ -75,46 +80,129 @@ const currencyCodes = [
   "ZAR",
   "AED",
   "TRL",
+  "SAR",
+  "XAU",
+  "XAG",
+  "XPT",
+  "XPD",
 ];
+
+const frankfurterCodes = [
+  "AUD",
+  "BGN",
+  "BRL",
+  "CAD",
+  "CHF",
+  "CNY",
+  "CZK",
+  "DKK",
+  "EUR",
+  "GBP",
+  "HKD",
+  "HUF",
+  "IDR",
+  "ILS",
+  "INR",
+  "ISK",
+  "JPY",
+  "KRW",
+  "MXN",
+  "MYR",
+  "NOK",
+  "NZD",
+  "PHP",
+  "PLN",
+  "RON",
+  "SEK",
+  "SGD",
+  "THB",
+  "TRY",
+  "USD",
+  "ZAR",
+];
+
+const METAL_CODES = ["XAU", "XAG", "XPT", "XPD"];
+
+const OER_APP_ID = "e5f2b3b8c4b144b09ee8bee7b0128d3a";
+
+const ounceToGram = 31.1034768;
+
+const fetchOpenRates = async (date) => {
+  const key = `oer_${date}`;
+  const cached = localStorage.getItem(key);
+  if (cached) {
+    try {
+      return JSON.parse(cached);
+    } catch {
+      localStorage.removeItem(key);
+    }
+  }
+  const resp = await fetch(
+    `https://openexchangerates.org/api/historical/${date}.json?app_id=${OER_APP_ID}&show_metals=1`
+  );
+  if (!resp.ok) throw new Error("Request failed!");
+  const data = await resp.json();
+  const rates = data.rates;
+  METAL_CODES.forEach((m) => {
+    if (rates[m] != null) rates[m] *= ounceToGram;
+  });
+  localStorage.setItem(key, JSON.stringify(rates));
+  return rates;
+};
 
 const getSymbol = (code) => currencySymbols[code] || code;
 
 const fetchRate = async (from, to, date) => {
   if (from === to) return 1;
-  if (from === "USD" && to === "AED") return 3.6725;
-  if (from === "AED" && to === "USD") return 1 / 3.6725;
-  if (from === "AED") {
-    const resp = await fetch(
-      `https://api.frankfurter.app/${date}?from=USD&to=${to}`
+
+  const useFrankfurter =
+    frankfurterCodes.includes(from) &&
+    frankfurterCodes.includes(to) &&
+    !METAL_CODES.includes(from) &&
+    !METAL_CODES.includes(to);
+
+  if (useFrankfurter) {
+    if (from === "USD" && to === "AED") return 3.6725;
+    if (from === "AED" && to === "USD") return 1 / 3.6725;
+    if (from === "AED") {
+      const resp = await fetch(
+        `https://api.frankfurter.app/${date}?from=USD&to=${to}`
+      );
+      if (!resp.ok) throw new Error("Request failed!");
+      const data = await resp.json();
+      const usdToSecond = data.rates[to];
+      return (1 / 3.6725) * usdToSecond;
+    }
+    if (to === "AED") {
+      const resp = await fetch(
+        `https://api.frankfurter.app/${date}?from=${from}&to=USD`
+      );
+      if (!resp.ok) throw new Error("Request failed!");
+      const data = await resp.json();
+      const firstToUsd = data.rates["USD"];
+      return firstToUsd * 3.6725;
+    }
+    const response = await fetch(
+      `https://api.frankfurter.app/${date}?from=${from}&to=${to}`
     );
-    if (!resp.ok) throw new Error("Request failed!");
-    const data = await resp.json();
-    const usdToSecond = data.rates[to];
-    return (1 / 3.6725) * usdToSecond;
+    if (!response.ok) throw new Error("Request failed!");
+    const data = await response.json();
+    return data.rates[to];
   }
-  if (to === "AED") {
-    const resp = await fetch(
-      `https://api.frankfurter.app/${date}?from=${from}&to=USD`
-    );
-    if (!resp.ok) throw new Error("Request failed!");
-    const data = await resp.json();
-    const firstToUsd = data.rates["USD"];
-    return firstToUsd * 3.6725;
-  }
-  const response = await fetch(
-    `https://api.frankfurter.app/${date}?from=${from}&to=${to}`
-  );
-  if (!response.ok) throw new Error("Request failed!");
-  const data = await response.json();
-  return data.rates[to];
+
+  const rates = await fetchOpenRates(date);
+  const fromRate = from === "USD" ? 1 : rates[from];
+  const toRate = to === "USD" ? 1 : rates[to];
+  if (fromRate == null || toRate == null) throw new Error("Rate not found");
+  return toRate / fromRate;
 };
 
 function Currency({ isSuper, onTitleClick }) {
   const [currencies, setCurrencies] = useState([
     { code: "USD", amount: 1, rate: 1 },
     { code: "TRY", amount: 0, rate: 0 },
+    { code: "XAU", amount: 0, rate: 0 },
     { code: "AED", amount: 0, rate: 0 },
-    { code: "EUR", amount: 0, rate: 0 },
   ]);
   const today = new Date().toISOString().slice(0, 10);
   const [currencyTime, setCurrencyTime] = useState(today);
