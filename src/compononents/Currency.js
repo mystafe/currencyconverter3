@@ -164,7 +164,7 @@ const frankfurterCodes = [
 
 const METAL_CODES = ["XAU", "XAG", "XPT", "XPD"];
 
-const OER_APP_ID = "e5f2b3b8c4b144b09ee8bee7b0128d3a";
+const OER_APP_ID = process.env.REACT_APP_APP_ID;
 
 const TROY_OUNCE_TO_GRAM = 31.1034768;
 // Convert metal prices from USD per troy ounce to USD per gram
@@ -262,11 +262,17 @@ const fetchRate = async (from, to, date) => {
 
 function Currency({ isSuper, onTitleClick }) {
   const { t } = useTranslation();
-  const [currencies, setCurrencies] = useState([
-    { code: "USD", amount: 1, rate: 1 },
-    { code: "TRY", amount: 0, rate: 0 },
-    { code: "AED", amount: 0, rate: 0 },
-  ]);
+  const defaultCodes = (process.env.REACT_APP_DEFAULT_CURRENCIES || 'USD,TRY,AED')
+    .split(',')
+    .map((c) => c.trim())
+    .filter(Boolean);
+  const [currencies, setCurrencies] = useState(
+    defaultCodes.map((code, idx) => ({
+      code,
+      amount: idx === 0 ? 1 : 0,
+      rate: idx === 0 ? 1 : 0,
+    }))
+  );
   const MIN_DATE = "2013-04-01";
   const today = new Date().toISOString().slice(0, 10);
   const [currencyTime, setCurrencyTime] = useState(today);
@@ -498,6 +504,7 @@ function Currency({ isSuper, onTitleClick }) {
             dateFormat="yyyy-MM-dd"
             showYearDropdown
             dropdownMode="select"
+            readOnly
             withPortal={isMobile}
           />
           <Button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
@@ -523,6 +530,7 @@ function Currency({ isSuper, onTitleClick }) {
         dateFormat="yyyy-MM-dd"
         showYearDropdown
         dropdownMode="select"
+        readOnly
         withPortal={isMobile}
       />
       )}

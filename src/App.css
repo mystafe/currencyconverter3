@@ -187,9 +187,14 @@ input[type="date"] {
   border-bottom: 1px solid #555;
 }
 
+
 .react-datepicker__current-month,
 .react-datepicker-year-header {
   color: rgb(108, 92, 231);
+}
+
+.react-datepicker-year-header {
+  display: none;
 }
 
 body.dark .react-datepicker__current-month,
@@ -344,6 +349,13 @@ button {
   right: 110px;
 }
 
+.usageCheck {
+  width: auto;
+  position: absolute;
+  top: 10px;
+  right: 160px;
+}
+
 #getUsdCurrencyBtn,
 #getUsdCurrencyOldBtn {
   background-color: #30931c;
@@ -390,10 +402,12 @@ body.dark .footer {
 .currencyDiv .plusIcon {
   text-align: center;
   font-size: 1rem;
-  margin-top: 10px;
+  margin: 10px auto;
   color: #0f9d58 !important;
   cursor: pointer;
   transition: transform 0.2s ease;
+  width: auto;
+  padding: 5px 20px;
 }
 
 .plusIcon:hover {
