@@ -211,6 +211,21 @@ body.dark .react-datepicker-year-header {
   color: rgb(108, 92, 231);
 }
 
+.react-datepicker__year-dropdown-container--select select {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-weight: bold;
+}
+
+.react-datepicker__year-dropdown {
+  background-color: #444;
+}
+
+body.dark .react-datepicker__year-dropdown {
+  background-color: #333;
+}
+
 .react-datepicker__navigation--years-previous,
 .react-datepicker__navigation--years-upcoming {
   background-color: transparent;
@@ -320,6 +335,13 @@ button {
   position: absolute;
   top: 10px;
   right: 60px;
+}
+
+.cacheClear {
+  width: auto;
+  position: absolute;
+  top: 10px;
+  right: 110px;
 }
 
 #getUsdCurrencyBtn,

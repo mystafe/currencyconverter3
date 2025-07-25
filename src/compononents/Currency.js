@@ -197,6 +197,13 @@ const getSymbol = (code) => currencySymbols[code] || code;
 const fetchRate = async (from, to, date) => {
   if (from === to) return 1;
 
+  const cacheKey = `rate_${from}_${to}_${date}`;
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) {
+    const num = parseFloat(cached);
+    if (!isNaN(num)) return num;
+  }
+
   const useFrankfurter =
     frankfurterCodes.includes(from) &&
     frankfurterCodes.includes(to) &&
@@ -204,8 +211,14 @@ const fetchRate = async (from, to, date) => {
     !METAL_CODES.includes(to);
 
   if (useFrankfurter) {
-    if (from === "USD" && to === "AED") return 3.6725;
-    if (from === "AED" && to === "USD") return 1 / 3.6725;
+    if (from === "USD" && to === "AED") {
+      localStorage.setItem(cacheKey, 3.6725);
+      return 3.6725;
+    }
+    if (from === "AED" && to === "USD") {
+      localStorage.setItem(cacheKey, 1 / 3.6725);
+      return 1 / 3.6725;
+    }
     if (from === "AED") {
       const resp = await fetch(
         `https://api.frankfurter.app/${date}?from=USD&to=${to}`
@@ -213,7 +226,9 @@ const fetchRate = async (from, to, date) => {
       if (!resp.ok) throw new Error("Request failed!");
       const data = await resp.json();
       const usdToSecond = data.rates[to];
-      return (1 / 3.6725) * usdToSecond;
+      const rate = (1 / 3.6725) * usdToSecond;
+      localStorage.setItem(cacheKey, rate);
+      return rate;
     }
     if (to === "AED") {
       const resp = await fetch(
@@ -222,21 +237,27 @@ const fetchRate = async (from, to, date) => {
       if (!resp.ok) throw new Error("Request failed!");
       const data = await resp.json();
       const firstToUsd = data.rates["USD"];
-      return firstToUsd * 3.6725;
+      const rate = firstToUsd * 3.6725;
+      localStorage.setItem(cacheKey, rate);
+      return rate;
     }
     const response = await fetch(
       `https://api.frankfurter.app/${date}?from=${from}&to=${to}`
     );
     if (!response.ok) throw new Error("Request failed!");
     const data = await response.json();
-    return data.rates[to];
+    const rate = data.rates[to];
+    localStorage.setItem(cacheKey, rate);
+    return rate;
   }
 
   const rates = await fetchOpenRates(date);
   const fromRate = from === "USD" ? 1 : rates[from];
   const toRate = to === "USD" ? 1 : rates[to];
   if (fromRate == null || toRate == null) throw new Error("Rate not found");
-  return toRate / fromRate;
+  const rate = toRate / fromRate;
+  localStorage.setItem(cacheKey, rate);
+  return rate;
 };
 
 function Currency({ isSuper, onTitleClick }) {
@@ -476,6 +497,7 @@ function Currency({ isSuper, onTitleClick }) {
             minDate={new Date(MIN_DATE)}
             dateFormat="yyyy-MM-dd"
             showYearDropdown
+            dropdownMode="select"
             withPortal={isMobile}
           />
           <Button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
@@ -489,19 +511,20 @@ function Currency({ isSuper, onTitleClick }) {
           </Button>
         </div>
       ) : (
-        <DatePicker
-          selected={new Date(currencyTime)}
-          onChange={(date) =>
-            handleDateSelection({
-              target: { value: date.toISOString().slice(0, 10) },
-            })
-          }
-          maxDate={new Date()}
-          minDate={new Date(MIN_DATE)}
-          dateFormat="yyyy-MM-dd"
-          showYearDropdown
-          withPortal={isMobile}
-        />
+      <DatePicker
+        selected={new Date(currencyTime)}
+        onChange={(date) =>
+          handleDateSelection({
+            target: { value: date.toISOString().slice(0, 10) },
+          })
+        }
+        maxDate={new Date()}
+        minDate={new Date(MIN_DATE)}
+        dateFormat="yyyy-MM-dd"
+        showYearDropdown
+        dropdownMode="select"
+        withPortal={isMobile}
+      />
       )}
     </div>
   );

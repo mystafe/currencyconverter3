@@ -32,13 +32,18 @@ function App() {
     });
   };
 
+  const clearCache = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
   useEffect(() => {
     document.body.className = theme;
   }, [theme]);
 
   return (
     <div className="container">
-      {superMode && (
+        {superMode && (
         <>
           <button className="themeToggle" onClick={toggleTheme}>
             {theme === "dark" ? "☀️" : "🌙"}
@@ -46,6 +51,7 @@ function App() {
           <button className="langToggle" onClick={toggleLanguage}>
             {i18n.language === 'tr' ? '🇬🇧' : '🇹🇷'}
           </button>
+          <button className="cacheClear" onClick={clearCache}>🗑️</button>
         </>
       )}
       <Currency isSuper={superMode} onTitleClick={handleTitleClick} />
