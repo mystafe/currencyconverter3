@@ -169,6 +169,9 @@ input[type="date"] {
   border: 1px solid #555;
   color: #fff;
   animation: fadeInScale 0.3s ease;
+  font-size: 16px;
+  border-radius: 8px;
+  width: 100%;
 }
 
 .react-datepicker__header {
@@ -196,7 +199,19 @@ body.dark .react-datepicker__day {
 
 body.dark .react-datepicker__day--disabled,
 body.dark .react-datepicker__day--outside-month {
-  color: #000;
+  color: #555;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #6c5ce7;
+  color: #fff;
+}
+
+@media (max-width: 576px) {
+  .react-datepicker {
+    font-size: 18px;
+  }
 }
 
 input[type="number"] {
