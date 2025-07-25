@@ -7,11 +7,11 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const currencySymbols = {
   AUD: "A$",
-  BGN: "лв",
+  BGN: "BGN",
   BRL: "R$",
   CAD: "C$",
   CHF: "CHF",
-  CNY: "¥",
+  CNY: "CNY",
   CZK: "Kč",
   DKK: "kr",
   EUR: "€",
@@ -19,31 +19,31 @@ const currencySymbols = {
   HKD: "HK$",
   HUF: "Ft",
   IDR: "Rp",
-  ILS: "₪",
-  INR: "₹",
+  ILS: "ILS",
+  INR: "INR",
   ISK: "kr",
-  JPY: "¥",
-  KRW: "₩",
+  JPY: "JPY",
+  KRW: "KRW",
   MXN: "MX$",
   MYR: "RM",
   NOK: "kr",
   NZD: "NZ$",
-  PHP: "₱",
-  PLN: "zł",
+  PHP: "PHP",
+  PLN: "PLN",
   RON: "lei",
   SEK: "kr",
   SGD: "S$",
-  THB: "฿",
-  TRY: "₺",
-  TRL: "₺",
+  THB: "THB",
+  TRY: "TRY",
+  TRL: "TRL",
   USD: "$",
   ZAR: "R",
-  AED: "د.إ",
-  SAR: "ر.س",
-  XAU: "Au(g)",
-  XAG: "Ag(g)",
-  XPT: "Pt(g)",
-  XPD: "Pd(g)",
+  AED: "AED",
+  SAR: "SAR",
+  XAU: "Gold",
+  XAG: "Silver",
+  XPT: "Platinum",
+  XPD: "Palladium",
 };
 
 const currencyCodes = [
@@ -142,8 +142,12 @@ const fetchOpenRates = async (date) => {
   );
   if (!resp.ok) throw new Error("Request failed!");
   const data = await resp.json();
-  localStorage.setItem(key, JSON.stringify(data.rates));
-  return data.rates;
+  const rates = data.rates;
+  METAL_CODES.forEach((m) => {
+    if (rates[m] != null) rates[m] *= ounceToGram;
+  });
+  localStorage.setItem(key, JSON.stringify(rates));
+  return rates;
 };
 
 const getSymbol = (code) => currencySymbols[code] || code;
@@ -187,19 +191,17 @@ const fetchRate = async (from, to, date) => {
   }
 
   const rates = await fetchOpenRates(date);
-  let fromRate = from === "USD" ? 1 : rates[from];
-  let toRate = to === "USD" ? 1 : rates[to];
+  const fromRate = from === "USD" ? 1 : rates[from];
+  const toRate = to === "USD" ? 1 : rates[to];
   if (fromRate == null || toRate == null) throw new Error("Rate not found");
-  if (METAL_CODES.includes(from)) fromRate /= ounceToGram;
-  if (METAL_CODES.includes(to)) toRate /= ounceToGram;
   return toRate / fromRate;
 };
 
 function Currency({ isSuper, onTitleClick }) {
   const [currencies, setCurrencies] = useState([
-    { code: "XAU", amount: 1, rate: 1 },
-    { code: "USD", amount: 0, rate: 0 },
+    { code: "USD", amount: 1, rate: 1 },
     { code: "TRY", amount: 0, rate: 0 },
+    { code: "XAU", amount: 0, rate: 0 },
     { code: "AED", amount: 0, rate: 0 },
   ]);
   const today = new Date().toISOString().slice(0, 10);
