@@ -4,7 +4,7 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      title: 'Currency & Commodity Calculator',
+      title: 'CURRENCY-COMMODITY CALCULATOR',
       select_currency: 'Select currency/metal',
       remove_confirm: 'Remove currency?',
       exchange_rates_from: 'Exchange rates from',

@@ -244,7 +244,6 @@ function Currency({ isSuper, onTitleClick }) {
   const [currencies, setCurrencies] = useState([
     { code: "USD", amount: 1, rate: 1 },
     { code: "TRY", amount: 0, rate: 0 },
-    { code: "XAU", amount: 0, rate: 0 },
     { code: "AED", amount: 0, rate: 0 },
   ]);
   const MIN_DATE = "2013-04-01";

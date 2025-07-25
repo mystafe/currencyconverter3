@@ -104,6 +104,10 @@ body.dark .currencyDiv {
   color: inherit;
   font-size: 20px;
   text-transform: uppercase;
+  border: 2px solid rgb(108, 92, 231);
+  display: inline-block;
+  padding: 4px 8px;
+  white-space: nowrap;
 }
 
 .currencyDiv button {
@@ -204,7 +208,12 @@ body.dark .react-datepicker__day--outside-month {
 
 .react-datepicker__day--selected,
 .react-datepicker__day--keyboard-selected {
-  background-color: #6c5ce7;
+  background-color: rgb(108, 92, 231) !important;
+  color: #fff;
+}
+
+.react-datepicker__day:hover {
+  background-color: rgb(108, 92, 231) !important;
   color: #fff;
 }
 
@@ -390,5 +399,9 @@ body.dark .footer {
   }
   .currencyDiv h1 {
     font-size: 18px;
+    border: 2px solid rgb(108, 92, 231);
+    display: inline-block;
+    padding: 4px 8px;
+    white-space: nowrap;
   }
 }
