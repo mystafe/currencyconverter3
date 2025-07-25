@@ -18,6 +18,17 @@
   }
 }
 
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .currencyDiv span.increase {
   animation: increase 15s;
   color: #0f9d58;
@@ -42,7 +53,8 @@ body {
 }
 
 .container {
-  padding-top: 20px;
+  position: relative;
+  padding-top: 70px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -66,7 +78,7 @@ body.dark {
 
 .currencyDiv {
   width: 90vw;
-  margin: 20px auto;
+  margin: 40px auto;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -144,12 +156,19 @@ input[type="date"] {
   font-size: 16px;
   background-color: #f8f8f8;
   color: inherit;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.react-datepicker__input-container input:focus {
+  box-shadow: 0 0 5px #6c5ce7;
+  transform: scale(1.02);
 }
 
 .react-datepicker {
   background-color: #333;
   border: 1px solid #555;
   color: #fff;
+  animation: fadeInScale 0.3s ease;
 }
 
 .react-datepicker__header {
@@ -219,11 +238,11 @@ select {
 }
 
 .currencyRow input[type="text"] {
-  width: 70%;
+  width: 65%;
 }
 
 .currencyRow select {
-  width: 25%;
+  width: 30%;
   font-size: 14px;
 }
 
@@ -353,5 +372,8 @@ body.dark .footer {
   .dateNavigator button {
     font-size: 0.8rem;
     padding: 2px 5px;
+  }
+  .currencyDiv h1 {
+    font-size: 18px;
   }
 }
