@@ -9,6 +9,9 @@ const resources = {
       remove_confirm: 'Remove currency?',
       exchange_rates_from: 'Exchange rates from',
       commodities_from: 'Commodities from',
+      today: 'Today',
+      last_year: 'Last Year',
+      five_years_ago: '5 Years Ago',
     },
   },
   tr: {
@@ -18,6 +21,9 @@ const resources = {
       remove_confirm: 'Para birimi kald\u0131r\u0131ls\u0131n m\u0131?',
       exchange_rates_from: 'Kur verileri',
       commodities_from: 'Emtia verileri',
+      today: 'Bug\u00fcn',
+      last_year: 'Ge\u00e7en Y\u0131l',
+      five_years_ago: '5 Y\u0131l \u00d6nce',
     },
   },
 };

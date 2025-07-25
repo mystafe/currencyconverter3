@@ -279,6 +279,8 @@ function Currency({ isSuper, onTitleClick }) {
   const [showAdd, setShowAdd] = useState(false);
   const [baseIndex, setBaseIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 576);
+  const [compareTime, setCompareTime] = useState(null);
+  const [compareAmounts, setCompareAmounts] = useState([]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 576);
@@ -346,6 +348,29 @@ function Currency({ isSuper, onTitleClick }) {
     updateRates();
   }, [currencyTime, baseIndex, currencies[baseIndex].code, currencies[baseIndex].amount, codesList]);
 
+  useEffect(() => {
+    if (!compareTime) {
+      setCompareAmounts([]);
+      return;
+    }
+    const updateCompare = async () => {
+      try {
+        const base = currencies[baseIndex];
+        const res = await Promise.all(
+          currencies.map(async (c, idx) => {
+            if (idx === baseIndex) return base.amount;
+            const rate = await fetchRate(base.code, c.code, compareTime);
+            return (base.amount * rate).toFixed(2);
+          })
+        );
+        setCompareAmounts(res);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+    updateCompare();
+  }, [compareTime, baseIndex, currencies[baseIndex].code, currencies[baseIndex].amount, codesList]);
+
   const handleAmountChange = (index, value) => {
     const parseValue = (val) => {
       if (typeof val === "string") {
@@ -397,8 +422,24 @@ function Currency({ isSuper, onTitleClick }) {
     }
   };
 
+  const handleToday = () => {
+    setCurrencyTime(today);
+  };
+
+  const handleLastYear = () => {
+    const d = new Date(currencyTime);
+    d.setFullYear(d.getFullYear() - 1);
+    setCompareTime(d.toISOString().slice(0, 10));
+  };
+
+  const handleFiveYears = () => {
+    const d = new Date(currencyTime);
+    d.setFullYear(d.getFullYear() - 5);
+    setCompareTime(d.toISOString().slice(0, 10));
+  };
+
   return (
-    <div className="currencyDiv">
+    <div className={`currencyDiv${compareTime ? ' compareMode' : ''}`}>
       <h1 onClick={onTitleClick}>{t('title')}</h1>
       <div className="currencySelection">
         <div className="dropdown">
@@ -439,6 +480,14 @@ function Currency({ isSuper, onTitleClick }) {
                   onFocus={() => setBaseIndex(idx)}
                   onChange={(e) => handleAmountChange(idx, e.target.value)}
                 />
+                {compareTime && (
+                  <Form.Control
+                    type="text"
+                    readOnly
+                    className="compareInput"
+                    value={compareAmounts[idx] || ''}
+                  />
+                )}
                 {currencies.length >= 3 && (
                   <Button
                     variant="danger"
@@ -478,15 +527,22 @@ function Currency({ isSuper, onTitleClick }) {
           )}
         </div>
       </div>
-      {currencies.length < 8 && (
-        <Button
-          variant="success"
-          className="plusIcon"
-          onClick={() => setShowAdd(!showAdd)}
-        >
-          {showAdd ? "➖" : "➕"}
-        </Button>
-      )}
+      <div className="presetRow">
+        {currencyTime !== today && (
+          <Button onClick={handleToday}>{t('today')}</Button>
+        )}
+        <Button onClick={handleLastYear}>{t('last_year')}</Button>
+        <Button onClick={handleFiveYears}>{t('five_years_ago')}</Button>
+        {currencies.length < 8 && (
+          <Button
+            variant="success"
+            className="plusIcon"
+            onClick={() => setShowAdd(!showAdd)}
+          >
+            {showAdd ? "➖" : "➕"}
+          </Button>
+        )}
+      </div>
       {isSuper ? (
         <div className="dateNavigator">
           <Button onClick={() => changeYear(-1)} disabled={prevYearDisabled}>{"<<<"}</Button>
@@ -517,23 +573,41 @@ function Currency({ isSuper, onTitleClick }) {
             {">>>"}
           </Button>
         </div>
-      ) : (
-      <DatePicker
-        selected={new Date(currencyTime)}
-        onChange={(date) =>
-          handleDateSelection({
-            target: { value: date.toISOString().slice(0, 10) },
-          })
-        }
-        maxDate={new Date()}
-        minDate={new Date(MIN_DATE)}
-        dateFormat="yyyy-MM-dd"
-        showYearDropdown
-        dropdownMode="select"
-        inputReadOnly
-        withPortal={isMobile}
-      />
-      )}
+      ) : null}
+      <div className="dateRow">
+        {!isSuper && (
+          <DatePicker
+            selected={new Date(currencyTime)}
+            onChange={(date) =>
+              handleDateSelection({
+                target: { value: date.toISOString().slice(0, 10) },
+              })
+            }
+            maxDate={new Date()}
+            minDate={new Date(MIN_DATE)}
+            dateFormat="yyyy-MM-dd"
+            showYearDropdown
+            dropdownMode="select"
+            inputReadOnly
+            withPortal={isMobile}
+          />
+        )}
+        {compareTime && (
+          <DatePicker
+            selected={new Date(compareTime)}
+            onChange={(date) =>
+              setCompareTime(date.toISOString().slice(0, 10))
+            }
+            maxDate={new Date()}
+            minDate={new Date(MIN_DATE)}
+            dateFormat="yyyy-MM-dd"
+            showYearDropdown
+            dropdownMode="select"
+            inputReadOnly
+            withPortal={isMobile}
+          />
+        )}
+      </div>
     </div>
   );
 }

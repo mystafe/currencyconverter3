@@ -402,11 +402,11 @@ body.dark .footer {
 .currencyDiv .plusIcon {
   text-align: center;
   font-size: 1rem;
-  margin: 10px auto;
+  margin-left: auto;
   color: #0f9d58 !important;
   cursor: pointer;
   transition: transform 0.2s ease;
-  width: 100%;
+  width: auto;
   padding: 5px 20px;
 }
 
@@ -425,6 +425,25 @@ body.dark .footer {
 
 .minusIcon:hover {
   animation: scaleIcon 0.3s forwards;
+}
+
+.presetRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.compareInput {
+  width: 65%;
+}
+
+.compareMode .currencyRow input[type="text"] {
+  width: 45%;
+}
+
+.compareMode .compareInput {
+  width: 45%;
 }
 
 @keyframes scaleIcon {
