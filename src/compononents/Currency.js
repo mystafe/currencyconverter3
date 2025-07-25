@@ -247,6 +247,7 @@ function Currency({ isSuper, onTitleClick }) {
     { code: "XAU", amount: 0, rate: 0 },
     { code: "AED", amount: 0, rate: 0 },
   ]);
+  const MIN_DATE = "2013-04-01";
   const today = new Date().toISOString().slice(0, 10);
   const [currencyTime, setCurrencyTime] = useState(today);
   const [showAdd, setShowAdd] = useState(false);
@@ -255,34 +256,34 @@ function Currency({ isSuper, onTitleClick }) {
   const nextDayDisabled = currencyTime >= today;
   const nextMonthDisabled = currencyTime >= today;
   const nextYearDisabled = currencyTime >= today;
+  const prevDayDisabled = currencyTime <= MIN_DATE;
+  const prevMonthDisabled = currencyTime <= MIN_DATE;
+  const prevYearDisabled = currencyTime <= MIN_DATE;
 
   const changeDate = (days) => {
     const d = new Date(currencyTime);
     d.setDate(d.getDate() + days);
-    const newDate = d.toISOString().slice(0, 10);
-    if (newDate > today) return;
+    let newDate = d.toISOString().slice(0, 10);
+    if (days < 0 && newDate < MIN_DATE) newDate = MIN_DATE;
+    if (days > 0 && newDate > today) return;
     handleDateSelection({ target: { value: newDate } });
   };
 
   const changeMonth = (months) => {
     const d = new Date(currencyTime);
     d.setMonth(d.getMonth() + months);
-    const newDate = d.toISOString().slice(0, 10);
-    if (months > 0 && newDate > today) {
-      handleDateSelection({ target: { value: today } });
-      return;
-    }
+    let newDate = d.toISOString().slice(0, 10);
+    if (months > 0 && newDate > today) newDate = today;
+    if (months < 0 && newDate < MIN_DATE) newDate = MIN_DATE;
     handleDateSelection({ target: { value: newDate } });
   };
 
   const changeYear = (years) => {
     const d = new Date(currencyTime);
     d.setFullYear(d.getFullYear() + years);
-    const newDate = d.toISOString().slice(0, 10);
-    if (years > 0 && newDate > today) {
-      handleDateSelection({ target: { value: today } });
-      return;
-    }
+    let newDate = d.toISOString().slice(0, 10);
+    if (years > 0 && newDate > today) newDate = today;
+    if (years < 0 && newDate < MIN_DATE) newDate = MIN_DATE;
     handleDateSelection({ target: { value: newDate } });
   };
 
@@ -455,9 +456,9 @@ function Currency({ isSuper, onTitleClick }) {
       )}
       {isSuper ? (
         <div className="dateNavigator">
-          <Button onClick={() => changeYear(-1)}>{"<<<"}</Button>
-          <Button onClick={() => changeMonth(-1)}>{"<<"}</Button>
-          <Button onClick={() => changeDate(-1)}>{"<"}</Button>
+          <Button onClick={() => changeYear(-1)} disabled={prevYearDisabled}>{"<<<"}</Button>
+          <Button onClick={() => changeMonth(-1)} disabled={prevMonthDisabled}>{"<<"}</Button>
+          <Button onClick={() => changeDate(-1)} disabled={prevDayDisabled}>{"<"}</Button>
           <DatePicker
             selected={new Date(currencyTime)}
             onChange={(date) =>
@@ -466,6 +467,7 @@ function Currency({ isSuper, onTitleClick }) {
               })
             }
             maxDate={new Date()}
+            minDate={new Date(MIN_DATE)}
             dateFormat="yyyy-MM-dd"
             showYearDropdown
           />
@@ -488,6 +490,7 @@ function Currency({ isSuper, onTitleClick }) {
             })
           }
           maxDate={new Date()}
+          minDate={new Date(MIN_DATE)}
           dateFormat="yyyy-MM-dd"
           showYearDropdown
         />
