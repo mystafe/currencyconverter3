@@ -5,7 +5,7 @@ const resources = {
   en: {
     translation: {
       title: 'Currency & Commodity Calculator',
-      select_currency: 'Select currency',
+      select_currency: 'Select currency/metal',
       remove_confirm: 'Remove currency?',
       exchange_rates_from: 'Exchange rates from',
       commodities_from: 'Commodities from',
@@ -14,7 +14,7 @@ const resources = {
   tr: {
     translation: {
       title: 'D\u00d6V\u0130Z - EMT\u0130A HESAPLAYICI',
-      select_currency: 'Para birimi se\u00e7',
+      select_currency: 'Para birimi/metal se\u00e7',
       remove_confirm: 'Para birimi kald\u0131r\u0131ls\u0131n m\u0131?',
       exchange_rates_from: 'Kur verileri',
       commodities_from: 'Emtia verileri',
