@@ -315,12 +315,18 @@ select {
 }
 
 .currencyRow input[type="text"] {
-  width: 65%;
+  width: 60%;
 }
 
 .currencyRow select {
-  width: 30%;
+  width: 25%;
   font-size: 14px;
+}
+
+.flagIcon {
+  width: 24px;
+  text-align: center;
+  font-size: 1.3rem;
 }
 
 button {
@@ -448,16 +454,19 @@ body.dark .footer {
   flex: 1;
 }
 
+
 .compareInput {
-  width: 65%;
+  width: 60%;
 }
+
 
 .compareMode .currencyRow input[type="text"] {
-  width: 45%;
+  width: 40%;
 }
 
+
 .compareMode .compareInput {
-  width: 45%;
+  width: 40%;
 }
 
 @media (max-width: 576px) {

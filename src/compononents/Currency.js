@@ -501,6 +501,7 @@ function Currency({ isSuper, onTitleClick }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
               >
+                <span className="flagIcon">{getFlag(c.code)}</span>
                 <Form.Select
                   value={c.code}
                   onChange={(e) => handleCurrencyChange(idx, e.target.value)}
@@ -538,6 +539,8 @@ function Currency({ isSuper, onTitleClick }) {
                 )}
                 {currencies.length >= 3 && (
                   <Button
+                    as={motion.button}
+                    whileTap={{ scale: 0.9 }}
                     variant="danger"
                     className="minusIcon"
                     onClick={() => handleRemoveCurrency(idx)}
@@ -577,16 +580,18 @@ function Currency({ isSuper, onTitleClick }) {
       </div>
       <div className="presetRow">
         {currencyTime !== today && (
-          <Button onClick={handleToday}>{t('today')}</Button>
+          <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={handleToday}>{t('today')}</Button>
         )}
-        <Button onClick={handleLastYear}>
+        <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={handleLastYear}>
           {formatTwoLines(t('last_year'))}
         </Button>
-        <Button onClick={handleFiveYears}>
+        <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={handleFiveYears}>
           {formatTwoLines(t('five_years_ago'))}
         </Button>
         {currencies.length < 8 && (
           <Button
+            as={motion.button}
+            whileTap={{ scale: 0.9 }}
             variant="success"
             className="plusIcon"
             onClick={() => setShowAdd(!showAdd)}
@@ -598,9 +603,9 @@ function Currency({ isSuper, onTitleClick }) {
       {isSuper ? (
         <>
           <div className="dateNavigator">
-            <Button onClick={() => changeYear(-1)} disabled={prevYearDisabled}>{"<<<"}</Button>
-            <Button onClick={() => changeMonth(-1)} disabled={prevMonthDisabled}>{"<<"}</Button>
-            <Button onClick={() => changeDate(-1)} disabled={prevDayDisabled}>{"<"}</Button>
+            <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeYear(-1)} disabled={prevYearDisabled}>{"<<<"}</Button>
+            <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeMonth(-1)} disabled={prevMonthDisabled}>{"<<"}</Button>
+            <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeDate(-1)} disabled={prevDayDisabled}>{"<"}</Button>
             <DatePicker
               selected={new Date(currencyTime)}
               onChange={(date) =>
@@ -617,21 +622,21 @@ function Currency({ isSuper, onTitleClick }) {
               onFocus={(e) => e.target.blur()}
               withPortal={isMobile}
             />
-            <Button onClick={() => changeDate(1)} disabled={nextDayDisabled}>
+            <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeDate(1)} disabled={nextDayDisabled}>
               {">"}
             </Button>
-            <Button onClick={() => changeMonth(1)} disabled={nextMonthDisabled}>
+            <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeMonth(1)} disabled={nextMonthDisabled}>
               {">>"}
             </Button>
-            <Button onClick={() => changeYear(1)} disabled={nextYearDisabled}>
+            <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeYear(1)} disabled={nextYearDisabled}>
               {">>>"}
             </Button>
           </div>
           {compareTime && (
             <div className="dateNavigator">
-              <Button onClick={() => changeCompareYear(-1)} disabled={comparePrevYearDisabled}>{"<<<"}</Button>
-              <Button onClick={() => changeCompareMonth(-1)} disabled={comparePrevMonthDisabled}>{"<<"}</Button>
-              <Button onClick={() => changeCompareDate(-1)} disabled={comparePrevDayDisabled}>{"<"}</Button>
+              <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeCompareYear(-1)} disabled={comparePrevYearDisabled}>{"<<<"}</Button>
+              <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeCompareMonth(-1)} disabled={comparePrevMonthDisabled}>{"<<"}</Button>
+              <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeCompareDate(-1)} disabled={comparePrevDayDisabled}>{"<"}</Button>
               <DatePicker
                 selected={new Date(compareTime)}
                 onChange={(date) =>
@@ -646,13 +651,13 @@ function Currency({ isSuper, onTitleClick }) {
                 onFocus={(e) => e.target.blur()}
                 withPortal={isMobile}
               />
-              <Button onClick={() => changeCompareDate(1)} disabled={compareNextDayDisabled}>
+              <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeCompareDate(1)} disabled={compareNextDayDisabled}>
                 {">"}
               </Button>
-              <Button onClick={() => changeCompareMonth(1)} disabled={compareNextMonthDisabled}>
+              <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeCompareMonth(1)} disabled={compareNextMonthDisabled}>
                 {">>"}
               </Button>
-              <Button onClick={() => changeCompareYear(1)} disabled={compareNextYearDisabled}>
+              <Button as={motion.button} whileTap={{ scale: 0.9 }} onClick={() => changeCompareYear(1)} disabled={compareNextYearDisabled}>
                 {">>>"}
               </Button>
             </div>
