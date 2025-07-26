@@ -477,7 +477,8 @@ body.dark .footer {
 }
 
 .dateRow.single .react-datepicker-wrapper {
-  flex-basis: 100%;
+  flex: 1 0 100%;
+  width: 100%;
 }
 
 @keyframes scaleIcon {
