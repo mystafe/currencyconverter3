@@ -4,7 +4,7 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      title: 'CURRENCY-COMMODITY CALCULATOR',
+      title: 'CURRENCY-COMMODITY CONVERTER',
       select_currency: 'Select currency/metal',
       remove_confirm: 'Remove currency?',
       exchange_rates_from: 'Exchange rates from',
@@ -16,7 +16,7 @@ const resources = {
   },
   tr: {
     translation: {
-      title: 'D\u00d6V\u0130Z - EMT\u0130A HESAPLAYICI',
+      title: 'D\u00d6V\u0130Z - EMT\u0130A \u00c7EV\u0130R\u0130C\u0130',
       select_currency: 'Para birimi/metal se\u00e7',
       remove_confirm: 'Para birimi kald\u0131r\u0131ls\u0131n m\u0131?',
       exchange_rates_from: 'Kur verileri',

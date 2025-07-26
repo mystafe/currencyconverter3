@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Currency-Commodity Converter
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a currency and commodity converter built with React.
 Currency exchange data is provided by [Frankfurter](https://frankfurter.dev).
 
 ## Available Scripts
