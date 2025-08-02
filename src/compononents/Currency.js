@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { AnimatePresence, motion } from "framer-motion";
+import allCurrencyCodes from "../currencyCodes";
 
 const currencySymbols = {
   AUD: "A$",
@@ -40,8 +41,7 @@ const currencySymbols = {
   ZAR: "R",
   AED: "DH",
   SAR: "SAR",
-  XAU: "Gold (g)",
-  XAG: "Silver (g)",
+  BTC: "₿",
   XPT: "Platinum (g)",
   XPD: "Palladium (g)",
 };
@@ -80,6 +80,15 @@ const currencyFlags = {
   ZAR: "\uD83C\uDDFF\uD83C\uDDE6", // South Africa
   AED: "\uD83C\uDDE6\uD83C\uDDEA", // United Arab Emirates
   SAR: "\uD83C\uDDF8\uD83C\uDDE6", // Saudi Arabia
+  RUB: "\uD83C\uDDF7\uD83C\uDDFA", // Russia
+  ARS: "\uD83C\uDDE6\uD83C\uDDF7", // Argentina
+  AZN: "\uD83C\uDDE6\uD83C\uDDFF", // Azerbaijan
+  GEL: "\uD83C\uDDEC\uD83C\uDDEA", // Georgia
+  IQD: "\uD83C\uDDEE\uD83C\uDDF6", // Iraq
+  IRR: "\uD83C\uDDEE\uD83C\uDDF7", // Iran
+  KZT: "\uD83C\uDDF0\uD83C\uDDFF", // Kazakhstan
+  SYP: "\uD83C\uDDF8\uD83C\uDDFE", // Syria
+  UAH: "\uD83C\uDDFA\uD83C\uDDE6", // Ukraine
   XAU: "\uD83E\uDD47", // gold medal
   XAG: "\uD83E\uDD48", // silver medal
   XPT: "\uD83E\uDE99", // coin
@@ -88,44 +97,35 @@ const currencyFlags = {
 
 const getFlag = (code) => currencyFlags[code] || "";
 
-const currencyCodes = [
-  "AUD",
-  "BGN",
-  "BRL",
-  "CAD",
-  "CHF",
-  "CNY",
-  "CZK",
-  "DKK",
-  "EUR",
-  "GBP",
-  "HKD",
-  "HUF",
-  "IDR",
-  "ILS",
-  "INR",
-  "ISK",
-  "JPY",
-  "KRW",
-  "MXN",
-  "MYR",
-  "NOK",
-  "NZD",
-  "PHP",
-  "PLN",
-  "RON",
-  "SEK",
-  "SGD",
-  "THB",
+const favoriteCodes = [
+  "AED",
   "TRY",
   "USD",
-  "ZAR",
-  "AED",
-  "SAR",
+  "EUR",
   "XAU",
   "XAG",
-  "XPT",
-  "XPD",
+  "BTC",
+  "RUB",
+  "ARS",
+  "CAD",
+  "AZN",
+  "CNY",
+  "GEL",
+  "IDR",
+  "IQD",
+  "INR",
+  "IRR",
+  "KRW",
+  "KZT",
+  "SEK",
+  "SYP",
+  "THB",
+  "UAH",
+];
+
+const orderedCodes = [
+  ...favoriteCodes,
+  ...allCurrencyCodes.filter((c) => !favoriteCodes.includes(c)),
 ];
 
 const frankfurterCodes = [
@@ -191,8 +191,6 @@ const fetchOpenRates = async (date) => {
   localStorage.setItem(key, JSON.stringify(rates));
   return rates;
 };
-
-const getSymbol = (code) => currencySymbols[code] || code;
 
 const fetchRate = async (from, to, date) => {
   if (from === to) return 1;
@@ -262,6 +260,12 @@ const fetchRate = async (from, to, date) => {
 
 function Currency({ isSuper, onTitleClick }) {
   const { t } = useTranslation();
+
+  const getSymbol = (code) => {
+    if (code === "XAU") return t("gold");
+    if (code === "XAG") return t("silver");
+    return currencySymbols[code] || code;
+  };
   const defaultCodes = (process.env.REACT_APP_DEFAULT_CURRENCIES || 'USD,TRY,AED')
     .split(',')
     .map((c) => c.trim())
@@ -505,11 +509,17 @@ function Currency({ isSuper, onTitleClick }) {
                   value={c.code}
                   onChange={(e) => handleCurrencyChange(idx, e.target.value)}
                 >
-                  {currencyCodes.map((code) => (
-                    <option key={code} value={code}>
-                      {`${getFlag(code)} ${getSymbol(code)} (${code})`}
-                    </option>
-                  ))}
+                  {orderedCodes
+                    .filter(
+                      (code) =>
+                        code === c.code ||
+                        !currencies.some((c2, j) => j !== idx && c2.code === code)
+                    )
+                    .map((code) => (
+                      <option key={code} value={code}>
+                        {`${getFlag(code)} ${getSymbol(code)} (${code})`}
+                      </option>
+                    ))}
                 </Form.Select>
                 <Form.Control
                   type="text"
@@ -564,7 +574,7 @@ function Currency({ isSuper, onTitleClick }) {
               <option value="" disabled>
                 {t('select_currency')}
               </option>
-              {currencyCodes
+              {orderedCodes
                 .filter((code) => !currencies.some((c) => c.code === code))
                 .map((code) => (
                   <option key={code} value={code}>

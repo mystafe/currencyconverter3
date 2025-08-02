@@ -12,6 +12,8 @@ const resources = {
       today: 'Today',
       last_year: 'Last Year',
       five_years_ago: '5 Years Ago',
+      gold: 'Gold (g)',
+      silver: 'Silver (g)',
     },
   },
   tr: {
@@ -24,6 +26,8 @@ const resources = {
       today: 'Bug\u00fcn',
       last_year: 'Ge\u00e7en Y\u0131l',
       five_years_ago: '5 Y\u0131l \u00d6nce',
+      gold: 'Alt\u0131n (g)',
+      silver: 'G\u00fcm\u00fc\u015f (g)',
     },
   },
 };
