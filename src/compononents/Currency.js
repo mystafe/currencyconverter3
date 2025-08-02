@@ -47,55 +47,24 @@ const currencySymbols = {
 };
 
 const currencyFlags = {
-  AUD: "\uD83C\uDDE6\uD83C\uDDFA", // Australia
-  BGN: "\uD83C\uDDE7\uD83C\uDDEC", // Bulgaria
-  BRL: "\uD83C\uDDE7\uD83C\uDDF7", // Brazil
-  CAD: "\uD83C\uDDE8\uD83C\uDDE6", // Canada
-  CHF: "\uD83C\uDDE8\uD83C\uDDED", // Switzerland
-  CNY: "\uD83C\uDDE8\uD83C\uDDF3", // China
-  CZK: "\uD83C\uDDE8\uD83C\uDDFF", // Czechia
-  DKK: "\uD83C\uDDE9\uD83C\uDDF0", // Denmark
-  EUR: "\uD83C\uDDEA\uD83C\uDDFA", // European Union
-  GBP: "\uD83C\uDDEC\uD83C\uDDE7", // United Kingdom
-  HKD: "\uD83C\uDDED\uD83C\uDDF0", // Hong Kong
-  HUF: "\uD83C\uDDED\uD83C\uDDFA", // Hungary
-  IDR: "\uD83C\uDDEE\uD83C\uDDE9", // Indonesia
-  ILS: "\uD83C\uDDEE\uD83C\uDDF1", // Israel
-  INR: "\uD83C\uDDEE\uD83C\uDDF3", // India
-  ISK: "\uD83C\uDDEE\uD83C\uDDF8", // Iceland
-  JPY: "\uD83C\uDDEF\uD83C\uDDF5", // Japan
-  KRW: "\uD83C\uDDF0\uD83C\uDDF7", // South Korea
-  MXN: "\uD83C\uDDF2\uD83C\uDDFD", // Mexico
-  MYR: "\uD83C\uDDF2\uD83C\uDDFE", // Malaysia
-  NOK: "\uD83C\uDDF3\uD83C\uDDF4", // Norway
-  NZD: "\uD83C\uDDF3\uD83C\uDDFF", // New Zealand
-  PHP: "\uD83C\uDDF5\uD83C\uDDED", // Philippines
-  PLN: "\uD83C\uDDF5\uD83C\uDDF1", // Poland
-  RON: "\uD83C\uDDF7\uD83C\uDDF4", // Romania
-  SEK: "\uD83C\uDDF8\uD83C\uDDEA", // Sweden
-  SGD: "\uD83C\uDDF8\uD83C\uDDEC", // Singapore
-  THB: "\uD83C\uDDF9\uD83C\uDDED", // Thailand
-  TRY: "\uD83C\uDDF9\uD83C\uDDF7", // Turkey
-  USD: "\uD83C\uDDFA\uD83C\uDDF8", // United States
-  ZAR: "\uD83C\uDDFF\uD83C\uDDE6", // South Africa
-  AED: "\uD83C\uDDE6\uD83C\uDDEA", // United Arab Emirates
-  SAR: "\uD83C\uDDF8\uD83C\uDDE6", // Saudi Arabia
-  RUB: "\uD83C\uDDF7\uD83C\uDDFA", // Russia
-  ARS: "\uD83C\uDDE6\uD83C\uDDF7", // Argentina
-  AZN: "\uD83C\uDDE6\uD83C\uDDFF", // Azerbaijan
-  GEL: "\uD83C\uDDEC\uD83C\uDDEA", // Georgia
-  IQD: "\uD83C\uDDEE\uD83C\uDDF6", // Iraq
-  IRR: "\uD83C\uDDEE\uD83C\uDDF7", // Iran
-  KZT: "\uD83C\uDDF0\uD83C\uDDFF", // Kazakhstan
-  SYP: "\uD83C\uDDF8\uD83C\uDDFE", // Syria
-  UAH: "\uD83C\uDDFA\uD83C\uDDE6", // Ukraine
   XAU: "\uD83E\uDD47", // gold medal
   XAG: "\uD83E\uDD48", // silver medal
   XPT: "\uD83E\uDE99", // coin
   XPD: "\u2699\uFE0F", // gear
+  BTC: "\u20BF", // bitcoin
 };
 
-const getFlag = (code) => currencyFlags[code] || "";
+const countryCodeToFlag = (countryCode) =>
+  countryCode
+    .toUpperCase()
+    .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0)));
+
+const getFlag = (code) => {
+  if (!code) return "";
+  if (currencyFlags[code]) return currencyFlags[code];
+  if (code.startsWith("X")) return "";
+  return countryCodeToFlag(code.slice(0, 2));
+};
 
 const favoriteCodes = [
   "AED",
