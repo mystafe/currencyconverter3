@@ -1,6 +1,7 @@
 import "./App.css";
 import Currency from "./compononents/Currency";
 import Footer from "./compononents/Footer";
+import Navbar from "./compononents/Navbar";
 
 import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
@@ -59,18 +60,14 @@ function App() {
 
   return (
     <div className="container">
-        {superMode && (
-        <>
-          <button className="themeToggle" onClick={toggleTheme}>
-            {theme === "dark" ? "☀️" : "🌙"}
-          </button>
-          <button className="langToggle" onClick={toggleLanguage}>
-            {i18n.language === 'tr' ? '🇬🇧' : '🇹🇷'}
-          </button>
-          <button className="cacheClear" onClick={clearCache}>🗑️</button>
-          <button className="usageCheck" onClick={checkUsage}>📈</button>
-        </>
-      )}
+      <Navbar
+        theme={theme}
+        toggleTheme={toggleTheme}
+        toggleLanguage={toggleLanguage}
+        superMode={superMode}
+        clearCache={clearCache}
+        checkUsage={checkUsage}
+      />
       <Currency isSuper={superMode} onTitleClick={handleTitleClick} />
       <Footer />
     </div>
