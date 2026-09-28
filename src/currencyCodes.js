@@ -1,4 +1,4 @@
-export default [
+const currencyCodes = [
   "AED",
   "AFN",
   "ALL",
@@ -173,3 +173,5 @@ export default [
   "ZWG",
   "ZWL",
 ];
+
+export default currencyCodes;
