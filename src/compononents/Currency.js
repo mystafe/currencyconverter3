@@ -188,7 +188,7 @@ const fetchRate = async (from, to, date) => {
     }
     if (from === "AED") {
       const resp = await fetch(
-        `https://api.frankfurter.app/${date}?from=USD&to=${to}`
+        `https://api.frankfurter.dev/v1/${date}?from=USD&to=${to}`
       );
       if (!resp.ok) throw new Error("Request failed!");
       const data = await resp.json();
@@ -199,7 +199,7 @@ const fetchRate = async (from, to, date) => {
     }
     if (to === "AED") {
       const resp = await fetch(
-        `https://api.frankfurter.app/${date}?from=${from}&to=USD`
+        `https://api.frankfurter.dev/v1/${date}?from=${from}&to=USD`
       );
       if (!resp.ok) throw new Error("Request failed!");
       const data = await resp.json();
@@ -209,7 +209,7 @@ const fetchRate = async (from, to, date) => {
       return rate;
     }
     const response = await fetch(
-      `https://api.frankfurter.app/${date}?from=${from}&to=${to}`
+      `https://api.frankfurter.dev/v1/${date}?from=${from}&to=${to}`
     );
     if (!response.ok) throw new Error("Request failed!");
     const data = await response.json();
